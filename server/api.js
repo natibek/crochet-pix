@@ -1,5 +1,5 @@
 const { isInteger } = require('mathjs');
-const {ImageGenerator} = require('./backend');
+const {ImageGenerator, FillTool} = require('./backend');
 
 const imageGenerator = new ImageGenerator();
 const express = require('express');
@@ -30,14 +30,17 @@ app.post("/api/process_image", (req, res) => {
     // imageGenerator.stride = new_stride;
     imageGenerator.performPreprocessing(original_pixel_data, width, height);
     imageGenerator.performShrinking(width, height);
-    let output = imageGenerator.pixel_data;
+    
+    let output = {pixel_data: imageGenerator.pixel_data, color_scheme:Array.from(imageGenerator.colorScheme)};
     res.status(200).send(JSON.stringify(output));
 
 });
 
-//add colorscheme to output data
-//cache preprocessed data for optimization
-//add more data with cached data and scheme to request for new generation with changed parameters
-    //if regenerating, check if parameters have changed (if not do nothing, else use preprocessed data to process again with new parameters)
+app.post("/api/fill", (req, res) => {
+    const {image_data, source, target_color, width, height} = req.body;
+    console.log(source, target_color, width, height);
+    const filler = new FillTool(image_data, source, target_color, width, height);
+    const filled_img = filler.get_filled_pixel();
+    res.json(filled_img);
 
-// app.get("/api/")
+});
