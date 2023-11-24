@@ -1,70 +1,10 @@
-# Getting Started with Create React App
+# Crochet_Pattern_Generator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A conversation with my sister about her crocheting projects helped me realize the demand for easily accessible software that is able to generate pixel patterns of images to aid with generating crochet patterns. With my interest in web development and image processing, I plan to use React, Node.js, Express, and CSS to create a website that accepts an image and produces a pixelated editable image showing where the edges are and the major color composition of the pixels. 
 
-## Available Scripts
+The first stages of the project included experimenting using Python's Pillow image processing library to test edge detection algorithms (found on https://github.com/natibek/Crochet_website). I tested the use of Convolution Neural Networks for this project but they were unnecessary since I could develop my own image analysis algorithm. The flow of my new algorithm is taking an image input, using Rest APIs to send a post request to the backend that uses Math.js and clever caching for the analysis, and then using the generated pixel data to produce an editable pixel art image (this stage is found on https://github.com/natibek/Crochet_Pattern_Generator). This final version has a React front end that uses an Express API to access the Node.js backend for processing.
 
-In the project directory, you can run:
+The image analysis uses Math.js and clever caching, as aforementioned, to first divide the image into 25 by 25-pixel chucks, take the average of the color within those chunks, and then find chunks that are similar enough in their RGB values within the entire image to encode them with a new color - their average. This not only produces an image with a color scheme that is not too large (making crocheting the pattern reasonable) but also reduces its size for server-side display and further processing. Now that I have the first stages of the backend completed, I will work on generating the pixel art representation from the output of the analysis. In the future, I hope to add a database feature so that users can generate multiple patterns and store them.
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
