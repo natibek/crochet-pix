@@ -1,67 +1,67 @@
 const math = require("mathjs");
 
-class FillTool{
-    constructor(image_data, source, target_color, width, height){
-        this.image_data = image_data;
-        this.source = source;
-        this.target_color = target_color;
-        this.width = width;
-        this.height = height;
-        this.matrix_pixel = null;
-    }
+// class FillTool{
+//     constructor(image_data, source, target_color, width, height){
+//         this.image_data = image_data;
+//         this.source = source;
+//         this.target_color = target_color;
+//         this.width = width;
+//         this.height = height;
+//         this.matrix_pixel = null;
+//     }
 
-    preprocess(){
-        this.matrix_pixel = []; 
+//     preprocess(){
+//         this.matrix_pixel = []; 
 
-        for (let row = 0; row<this.height; row++){
-            let cur_row = [];
-            for (let col = 0; col<this.width ; col++){
-                let pixel = this.image_data[col + this.width*row];
-                cur_row.push(pixel);
-            }
-            this.matrix_pixel.push(cur_row);
-        }
-    }
+//         for (let row = 0; row<this.height; row++){
+//             let cur_row = [];
+//             for (let col = 0; col<this.width ; col++){
+//                 let pixel = this.image_data[col + this.width*row];
+//                 cur_row.push(pixel);
+//             }
+//             this.matrix_pixel.push(cur_row);
+//         }
+//     }
 
-    equal(p_1, p_2){
-        if (p_1.r == p_2.r && p_1.g == p_2.g && p_1.b == p_2.b){
-            return true
-        }
-        return false
-    }
+//     equal(p_1, p_2){
+//         if (p_1.r == p_2.r && p_1.g == p_2.g && p_1.b == p_2.b){
+//             return true
+//         }
+//         return false
+//     }
 
-    dfs(){
-        let visited = [];
-        let direction = [[-1,0],[0,-1],[0,1][1,0]];
-        let stack = [this.source];
-        console.log(stack)
-        while (stack.length >= 1){
-            const pos = stack.pop();
-            console.log(pos);
-            visited.push(String(pos[0])+String(pos[1]));
+//     dfs(){
+//         let visited = [];
+//         let direction = [[-1,0],[0,-1],[0,1][1,0]];
+//         let stack = [this.source];
+//         console.log(stack)
+//         while (stack.length >= 1){
+//             const pos = stack.pop();
+//             console.log(pos);
+//             visited.push(String(pos[0])+String(pos[1]));
 
-            for (const dirs of direction){
-                let new_pos = [(pos[0] + dirs[0]), (pos[1] + dirs[1])]
-                if (new_pos[0] >= 0 && new_pos[0] < this.width){
-                    if (new_pos[1] >= 0 && new_pos[1] < this.height){
-                        if (this.equal(this.matrix_pixel[pos[0]][pos[1]], this.matrix_pixel[new_pos[0]][new_pos[1]])){
-                            if (!visited.includes(String(new_pos[0])+String(new_pos[1]))){
-                                stack.push(new_pos);
-                            }
-                        }
-                    }
-                }
-            }
-            this.matrix_pixel[pos[0]][pos[1]] = this.target_color;
-        }
-    }
+//             for (const dirs of direction){
+//                 let new_pos = [(pos[0] + dirs[0]), (pos[1] + dirs[1])]
+//                 if (new_pos[0] >= 0 && new_pos[0] < this.width){
+//                     if (new_pos[1] >= 0 && new_pos[1] < this.height){
+//                         if (this.equal(this.matrix_pixel[pos[0]][pos[1]], this.matrix_pixel[new_pos[0]][new_pos[1]])){
+//                             if (!visited.includes(String(new_pos[0])+String(new_pos[1]))){
+//                                 stack.push(new_pos);
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//             this.matrix_pixel[pos[0]][pos[1]] = this.target_color;
+//         }
+//     }
 
-    get_filled_pixel(){
-        this.preprocess();
-        this.dfs();
-        return this.matrix_pixel;
-    }
-}
+//     get_filled_pixel(){
+//         this.preprocess();
+//         this.dfs();
+//         return this.matrix_pixel;
+//     }
+// }
 
 
 class ImageGenerator{
@@ -172,6 +172,5 @@ class ImageGenerator{
 }
 
 module.exports = {
-    ImageGenerator,
-    FillTool
+    ImageGenerator
 };

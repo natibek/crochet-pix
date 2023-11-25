@@ -2,8 +2,11 @@ import { useState, useEffect, createContext, useContext } from 'react';
 import React from 'react';
 import './App.css';
 import { toJpeg } from 'html-to-image';
-import brush from "./assests/brush.svg"
-import fill from "./assests/fill.svg"
+import html2canvas from 'html2canvas';
+import brush from "./assets/brush.svg";
+import dot from "./assets/dot1.svg";
+import fill from "./assets/fill.svg";
+
 
 
 const ImageContext = createContext(null);
@@ -12,38 +15,39 @@ const ToolContext = createContext(null);
 const ColorContext = createContext(null);
 const SelectedColorContextInd = createContext();
 const SelectedColorContext = createContext();
+const DimContext = createContext();
 
 const api_url = "http://localhost:5000/api";
 
-async function fill_image_api_call(image_data, source, target_color, width, height){
-  let requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      },
-    body: JSON.stringify({
-      image_data: (image_data), 
-      source: (source), 
-      target_color: (target_color), 
-      width: (width), 
-      height: (height)
-    })
-  };
-  console.log(requestOptions)
-  try{
-    const response = await fetch(api_url + "/fill", requestOptions);
+// async function fill_image_api_call(image_data, source, target_color, width, height){
+//   let requestOptions = {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       },
+//     body: JSON.stringify({
+//       image_data: (image_data), 
+//       source: (source), 
+//       target_color: (target_color), 
+//       width: (width), 
+//       height: (height)
+//     })
+//   };
+//   console.log(requestOptions)
+//   try{
+//     const response = await fetch(api_url + "/fill", requestOptions);
 
-    if (!response.ok){
-      throw new Error("Error with POST 2");
-    }
+//     if (!response.ok){
+//       throw new Error("Error with POST 2");
+//     }
 
-    const filled_img = await response.json();
-    return filled_img;
-  }
-  catch(error){
-    throw error;
-  }
-}
+//     const filled_img = await response.json();
+//     return filled_img;
+//   }
+//   catch(error){
+//     throw error;
+//   }
+// }
 
 async function process_image_api_call(requestData, width, height){
   /*
@@ -128,28 +132,35 @@ function UploadButton(){
         };
       };
     };
+
   };
 
   useEffect(() => {
     // Use the updated state values here to make api call
-    if (raw_img.img){      
-      process_image_api_call(
-        raw_img.img, 
-        raw_img.width, 
-        raw_img.height,
-      ).then(data => {
-        console.log("API data", data);
-        let {pixel_data, color_scheme} = data;
-        img_context.set_processed_pixel_data(pixel_data);
-        color_context.set_color(color_scheme)
-        is_processed_context.set_is_processsed(true);
-      });
+    if (raw_img.img){
+      is_processed_context.set_is_processed("Processing");
+      try {
+        process_image_api_call(
+          raw_img.img, 
+          raw_img.width, 
+          raw_img.height,
+        ).then(data => {
+          let {pixel_data, color_scheme} = data;
+          img_context.set_processed_pixel_data(pixel_data);
+          color_context.set_color(color_scheme);
+          is_processed_context.set_is_processed("Yes");
+        });
+        
+      } catch (error) {
+        is_processed_context.set_is_processed("No");
+      }      
+
     }
   }, [raw_img]);
 
   return (
-    <div className='upload' onClick={image_upload}>
-      <input type="file" id = "image_input" onChange={image_upload} accept='image/*'/>
+    <div className='upload'>
+      <input type="file" id = "image_input" accept='image/*' onChange={image_upload}/>
     </div>
   );
 }
@@ -168,8 +179,20 @@ function Nav(){
 
 function DownloadImage(){
 
-  const download = (e) => {
-    toJpeg(document.getElementById("grid_pixelated_image"))
+  const download = async (e) => {
+    const target_div = document.getElementById("grid_pixelated_image");
+
+    target_div.style.height = `${target_div.scrollHeight}px`;
+    target_div.style.width = `${target_div.scrollWidth}px`;
+  
+    // Ensure the div is rendered before capturing
+    await html2canvas(target_div);
+  
+    // Reset height and width to original values
+    target_div.style.height = '';
+    target_div.style.width = '';
+
+    toJpeg(target_div)
     .then(function (dataUrl) {
       var link = document.createElement('a');
       link.download = 'my-image-name.jpeg';
@@ -181,23 +204,14 @@ function DownloadImage(){
   return (
     <button id = 'download_button' onClick={download}>Download</button>
   );
-
-
-}
-
-function Pixel(){
-
-  return (
-    <div className='pix'></div>
-  );
 }
 
 function Tool(){
   const tool_context = useContext(ToolContext);
   
   function tool_select(event) {
-    if (event.target.id == "brush_tool" || event.target.id == "brush_img"){
-      if(document.getElementById("brush_tool").style.borderStyle == "dashed"){
+    if (event.target.id === "brush_tool" || event.target.id === "brush_img"){
+      if(document.getElementById("brush_tool").style.borderStyle === "dashed"){
         document.getElementById("brush_tool").style.borderStyle = "solid";
         tool_context.set_tool("None");
       }
@@ -205,20 +219,20 @@ function Tool(){
         document.getElementById("brush_tool").style.borderStyle = "dashed";
         tool_context.set_tool("Brush");
 
-        if (document.getElementById("fill_tool").style.borderStyle == "dashed"){
-          document.getElementById("fill_tool").style.borderStyle = "solid";
+        if (document.getElementById("pixel_tool").style.borderStyle === "dashed"){
+          document.getElementById("pixel_tool").style.borderStyle = "solid";
         } 
       }  
     } else {
-      if(document.getElementById("fill_tool").style.borderStyle == "dashed"){
-        document.getElementById("fill_tool").style.borderStyle = "solid";
+      if(document.getElementById("pixel_tool").style.borderStyle === "dashed"){
+        document.getElementById("pixel_tool").style.borderStyle = "solid";
         tool_context.set_tool("None");
       }
       else {
-        document.getElementById("fill_tool").style.borderStyle = "dashed";
-        tool_context.set_tool("Fill");
+        document.getElementById("pixel_tool").style.borderStyle = "dashed";
+        tool_context.set_tool("Pixel");
 
-        if (document.getElementById("brush_tool").style.borderStyle == "dashed"){
+        if (document.getElementById("brush_tool").style.borderStyle === "dashed"){
           document.getElementById("brush_tool").style.borderStyle = "solid";
         } 
       }  
@@ -230,13 +244,13 @@ function Tool(){
       <div className='tools_box'>
         <div>Tools</div>
         <div className='tools_list'>
-          <div className='tools' id='brush_tool' onClick={tool_select}> 
-            <img src={brush} id = "brush_img" alt='' width='25px'/>
+          <div className='tools' id='pixel_tool' onClick={tool_select}> 
+            <img src={dot} id = "pixel_img" alt='' width='25px'/>
 
           </div>
 
-          <div className='tools' id='fill_tool' onClick={tool_select}> 
-            <img src= {fill} id = "fill_img" alt='' width='25px' />
+          <div className='tools' id='brush_tool' onClick={tool_select}> 
+            <img src= {brush} id = "brush_img" alt='' width='25px' />
           </div>
         </div>
       </div>
@@ -245,18 +259,22 @@ function Tool(){
 }
 
 function CustomColor(){
-  const is_processed_context = useContext(IsProcessedContext);
   const color_context = useContext(ColorContext);
   const {selected_color_ind, set_selected_color_ind} = useContext(SelectedColorContextInd);
   const selected_color_context = useContext(SelectedColorContext);
 
 
   const selecting_color = (event) => {
-    set_selected_color_ind(event.target.id);
-    selected_color_context.set_selected_color(event.target.style.backgroundColor);
+    if (selected_color_ind !== event.target.id){
+      set_selected_color_ind(event.target.id);
+      selected_color_context.set_selected_color(event.target.style.backgroundColor);
+    } else {
+      set_selected_color_ind(null);
+      selected_color_context.set_selected_color(null);
+    }
   };
 
-  if (is_processed_context.is_processed){
+  if (color_context.color){
     return (
       <div className='custom_color_container'>
         <div className='custom_color_box'>
@@ -291,7 +309,6 @@ function CustomColor(){
 }
 
 function DefaultColor(){
-  const tool_context = useContext(ToolContext);
   const {selected_color_ind, set_selected_color_ind} = useContext(SelectedColorContextInd);
   const selected_color_context = useContext(SelectedColorContext);
 
@@ -303,9 +320,14 @@ function DefaultColor(){
   ]
   
   const selecting_color = (event) => {
-    set_selected_color_ind(event.target.id);
-    selected_color_context.set_selected_color(event.target.style.backgroundColor);
-  }; 
+    if (selected_color_ind !== event.target.id){
+      set_selected_color_ind(event.target.id);
+      selected_color_context.set_selected_color(event.target.style.backgroundColor);
+    } else {
+      set_selected_color_ind(null);
+      selected_color_context.set_selected_color(null);
+    }
+  };
   
   return (
     <div className='default_color_container'>
@@ -329,20 +351,124 @@ function DefaultColor(){
 }
 
 function Display(){
+
+  const [mouse_pressed, set_mouse_pressed] = useState(false);
+  // const [user_width, set_user_width] = useState('15');
+  // const [user_height, set_user_height] = useState('15');
+
+  const {dims, set_dims} = useContext(DimContext);
   const img_context = useContext(ImageContext); 
-  const is_processed_context = useContext(IsProcessedContext);
+  const {is_processed, set_is_processed} = useContext(IsProcessedContext);
   const tool_context = useContext(ToolContext);
   const selected_color_context = useContext(SelectedColorContext);
-  let display_pixel_data = Array(400).fill({r:255, g: 255, b:255});
-  let ncols = 20; 
+  let ncols = dims.user_width; 
+  let display_pixel_data = Array(dims.user_width*dims.user_height).fill({r:255, g: 255, b:255});
+    
+  let left_count = [];
+  let right_count = [];
+  let top_count = [];
+  let bottom_count = [];
 
-  if (is_processed_context.is_processed){
+  for (let i = dims.user_height; i > 0; i--) {
+    if (i % 2 !== 0){
+      left_count.push('-');
+      right_count.push(`${i}`);
+    }
+    else {
+      left_count.push(`${i}`);
+      right_count.push('-');
+    }
+  }
+
+  for (let i = dims.user_width; i > 0; i--){
+      top_count.push(`${i}`);
+      bottom_count.push(`${i}`);
+  }
+
+  const left_count_div = (
+    <div className='left_count'>
+      {left_count.map((c, ind) => (
+        (c === '-') ? <div className='count_lr_em' key={ind}></div> : <div className='count_lr' key={ind}>{c}</div>
+      ))}
+    </div>
+  );
+  const right_count_div = (
+    <div className='right_count'>
+      {right_count.map((c, ind) => (
+        (c === '-') ? <div className='count_lr_em' key={ind}></div> : <div className='count_lr' key={ind}>{c}</div>
+
+      ))}
+    </div>
+  );
+  const top_count_div = (
+    <div className='top_count'>
+      {top_count.map((c, ind) => (
+        <div className='count_ud' key={ind}>{c}</div>
+      ))}
+    </div>
+  );
+  const bottom_count_div = (
+    <div className='bottom_count'>
+      {bottom_count.map((c, ind) => (
+        <div className='count_ud' key={ind}>{c}</div>
+      ))}
+    </div>
+  );
+
+  if (is_processed === "Yes"){
     display_pixel_data = img_context.processed_pixel_data.flat();
     ncols = img_context.processed_pixel_data[0].length;
-  }
+    set_dims({
+      user_width: img_context.processed_pixel_data[0].length,
+      user_height: img_context.processed_pixel_data.length
+    });
+  } 
   
   const paint = (event) => {
-    if (tool_context.tool == "Brush"){
+    if (tool_context.tool === "Pixel"){
+      if (selected_color_context.selected_color){
+        event.target.style.backgroundColor = selected_color_context.selected_color;
+        // let new_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
+        // new_color = {
+        //   r: Number(new_color[0]),
+        //   g: Number(new_color[1]),
+        //   b: Number(new_color[2])
+        // };
+        // display_pixel_data[Number(event.target.id)] = new_color;
+      } 
+    } 
+    // else if (tool_context.tool == "Fill"){
+    //   const ind_x = (Number(event.target.id) % ncols);
+    //   const ind_y = (Number(event.target.id) - ncols*ind_x);
+    //   let target_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
+    //   target_color = {
+    //     r: Number(target_color[0]),
+    //     g: Number(target_color[1]),
+    //     b: Number(target_color[2])
+    //   };
+
+    //   if (selected_color_context.selected_color){
+    //     fill_image_api_call(
+    //       display_pixel_data, 
+    //       [ind_x,ind_y], 
+    //       target_color, 
+    //       ncols, 
+    //       display_pixel_data.length/ncols)
+    //     .then(data =>{
+    //       display_pixel_data = data;
+    //       img_context.set_processed_pixel_data(data);
+    //       console.log("Filled");
+    //     });
+
+    //   } else {
+    //     alert("Select a color");
+    //   }
+    // }
+    
+  };
+
+  const paint_multiple = (event) => {
+    if (tool_context.tool === "Brush" && mouse_pressed){
       if (selected_color_context.selected_color){
         event.target.style.backgroundColor = selected_color_context.selected_color;
         let new_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
@@ -352,56 +478,127 @@ function Display(){
           b: Number(new_color[2])
         };
         display_pixel_data[Number(event.target.id)] = new_color;
-      } else {
-        alert("Select a color");
-      }
+      } 
     } 
-    else if (tool_context.tool == "Fill"){
-      const ind_x = (Number(event.target.id) % ncols);
-      const ind_y = (Number(event.target.id) - ncols*ind_x);
-      let target_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
-      target_color = {
-        r: Number(target_color[0]),
-        g: Number(target_color[1]),
-        b: Number(target_color[2])
-      };
-
-      if (selected_color_context.selected_color){
-        fill_image_api_call(
-          display_pixel_data, 
-          [ind_x,ind_y], 
-          target_color, 
-          ncols, 
-          display_pixel_data.length/ncols)
-        .then(data =>{
-          display_pixel_data = data;
-          img_context.set_processed_pixel_data(data);
-          console.log("Filled");
-        });
-
-      } else {
-        alert("Select a color");
-      }
-    }
   };
 
+  const set_dim = () => {
+    const width_input = document.getElementById('grid_width');
+    const height_input = document.getElementById('grid_height');
+
+    set_dims({
+      user_width: width_input.value,
+      user_height: height_input.value
+    })
+  };
+
+  const reset_grid = () => {
+    set_is_processed('No');
+
+    set_dims({
+      user_width: 15,
+      user_height: 15
+
+    })
+
+    const width_input = document.getElementById('grid_width');
+    const height_input = document.getElementById('grid_height');
+    const pixels = document.getElementsByClassName('pix');
+    const pixelArray = Array.from(pixels);
+
+    pixelArray.forEach((pix, _) => {
+      if (pix){
+        pix.style.backgroundColor = 'white';
+      }
+    });
+  
+    width_input.value = 15;
+    height_input.value = 15;
+  };
+
+  const mouse_pressed_true = () => {
+    set_mouse_pressed(true);
+  };
+
+  const mouse_pressed_false = () => {
+    set_mouse_pressed(false);
+  };  
+
+  const nothing = () => {};
 
   return (
-      (<div id = "grid_pixelated_image"className='grid_display' style={{'--num-cols': ncols}}>
-  
-        {
-          display_pixel_data.map((pixel_val, ind) => (
-            <div 
-              key = {ind}
-              id = {ind} 
-              className='pix' 
-              style={{backgroundColor: `rgb(${pixel_val.r},${pixel_val.g},${pixel_val.b})`}}
-              onClick={paint}>
+    <div className='grid_container' >
+
+      <div className='canvas' id ="scrolling_canvas">
+        <div className='make_scroll' id = "grid_pixelated_image">  
+
+          <div className= {`grid_box ${is_processed === "Processing" ? 'processing' : ''}`}>
+
+            <div className='up_down'>
+              {top_count_div}
+
+              <div className='left_right'>
+                {left_count_div}
+
+                <div 
+                  className='grid_display' 
+                  style={{'--num-cols': ncols}} 
+                  onMouseDown={mouse_pressed_true}
+                  onMouseUp={mouse_pressed_false}
+                >
+                  {
+                    display_pixel_data.map((pixel_val, ind) => (
+                      <div 
+                        key = {ind}
+                        id = {ind} 
+                        className='pix' 
+                        style={{backgroundColor: `rgb(${pixel_val.r},${pixel_val.g},${pixel_val.b})`}}
+                        onClick= {is_processed === "Processing" ? nothing : paint}
+                        onMouseMove= {is_processed === "Processing" ? nothing : paint_multiple}>
+                      </div>
+                    ))
+            
+                  }
+                </div>
+                {right_count_div}
+
+              </div>
+              {bottom_count_div}
             </div>
-          ))
-  
-        }
-      </div>)
+          </div>  
+          {/* Grid box */}
+        </div>
+        <div 
+            className = {`${is_processed === "Processing" ? 'loading' : 'not_loading'}`}
+          >
+            <div>Pixelating</div>
+            <div id = "loading_img"><img  src={fill} width='300px' alt='Loading'/></div>
+            
+          </div>
+      </div> 
+      <div className= {
+      `customizers ${is_processed === "Processing" ? 'not_loading' : ''}`} >
+        
+        <button id = 'reset_button' onClick={reset_grid}>Reset</button>
+
+      <div className={
+      `sizing_choice ${is_processed === "Yes" ? 'not_loading' : ''}`}>
+      
+        <div className='input_dim'>    
+          <label htmlFor = "grid_width">Width:</label>
+          <input type='text' id='grid_width' defaultValue =  {dims.user_width}></input>
+        </div>
+
+        <div className='input_dim'>    
+          <label htmlFor = "grid_height">Height:</label>
+          <input type='text' id= 'grid_height' defaultValue= {dims.user_height}></input>
+        </div>
+        
+        <button className='wh_button' onClick={set_dim}>Submit</button>
+      </div>
+      </div>
+      
+    </div>
   );
 }
 
@@ -451,8 +648,8 @@ const ToolContextProvider = ({children}) => {
 };
 
 const IsProcessedContextProvider = ({children}) => {
-  const [is_processed, set_is_processsed] = useState(false);
-  const value = {is_processed, set_is_processsed};
+  const [is_processed, set_is_processed] = useState("No");
+  const value = {is_processed, set_is_processed};
 
   return (
     <IsProcessedContext.Provider value = {value}>
@@ -473,9 +670,21 @@ const ImageContextProvider = ({ children }) => {
   );
 };
 
+const DimContextProvider = ({children}) => {
+  const [dims, set_dims] = useState({user_width:15,user_height:15});
+  const value = { dims, set_dims };
+
+  return (
+    <DimContext.Provider value={value}>
+      {children}
+    </DimContext.Provider>
+  );
+};
+
 export default function App() {
 
   return (
+    <DimContextProvider>
     <SelectedColorContextProvider>
     <SelectedColorContextIndProvider>
       <ColorContextProvider>
@@ -483,22 +692,23 @@ export default function App() {
           <IsProcessedContextProvider>
             <ImageContextProvider>
                 <Nav />
-                <div className='container'>
+                {/* <div className='container'> */}
                   <div className='color_tool_container'>  
                     <Tool />
                     <DefaultColor />
                     <CustomColor />
                   </div> 
-                  <div className='canvas'>
+                  <div className='display_container'>
                     <Display />
                   </div>
-                </div>
+                {/* </div> */}
             </ImageContextProvider>
           </IsProcessedContextProvider>
         </ToolContextProvider>
       </ColorContextProvider>
     </SelectedColorContextIndProvider>
     </SelectedColorContextProvider>
+    </DimContextProvider>
   );
 }
 
