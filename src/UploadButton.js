@@ -23,8 +23,6 @@ async function process_image_api_call(requestData, width, height){
           image:(requestData), 
           width: (width), 
           height:(height),
-          // new_stride:stride_slider.value, 
-          // new_chunk:chunk_size_slider.value
       })
     };
   
@@ -114,7 +112,8 @@ export default function UploadButton(){
   
     return (
       <div className='upload'>
-        <input type="file" id = "image_input" accept='image/*' onChange={image_upload}/>
+        <label htmlFor='image_input' className='btn bg-light-grey'> Upload Image </label>
+        <input type="file" style={{display: 'none'}} id = "image_input" accept='image/*' onChange={image_upload}/>
       </div>
     );
   }

@@ -14,7 +14,7 @@ export const SelectedColorContextInd = createContext();
 export const SelectedColorContext = createContext();
 export const DimContext = createContext();
 
-export const api_url = "http://localhost:5000/api";
+export const api_url = "http://127.0.0.1:5000/api";
 
 // async function fill_image_api_call(image_data, source, target_color, width, height){
 //   let requestOptions = {
@@ -137,16 +137,18 @@ export default function App() {
           <IsProcessedContextProvider>
             <ImageContextProvider>
                 <Nav />
-                {/* <div className='container'> */}
-                  <div className='color_tool_container'>  
-                    <Tool />
-                    <DefaultColor />
-                    <CustomColor />
-                  </div> 
-                  <div className='display_container'>
+                <div className='row'>
+                  <div className='d-flex col col-4 d-flex justify-content-end align-items-start p-4'>
+                    <div className='flex-col-center' style={{gap: "15px", width: 'fit-content'}}>  
+                      <Tool />
+                      <DefaultColor />
+                      <CustomColor />
+                    </div> 
+                  </div>
+                  <div className='col col-8 flex-row-center'>
                     <Display />
                   </div>
-                {/* </div> */}
+                </div>
             </ImageContextProvider>
           </IsProcessedContextProvider>
         </ToolContextProvider>

@@ -27,7 +27,7 @@ export default function DownloadImage(){
     };
   
     return (
-      <button id = 'download_button' onClick={download}>Download</button>
+      <button className="btn bg-light-grey" id = 'download_button' onClick={download}>Download</button>
     );
   }
   

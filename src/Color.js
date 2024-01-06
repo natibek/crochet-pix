@@ -20,18 +20,18 @@ export function CustomColor(){
   
     if (color_context.color){
       return (
-        <div className='custom_color_container'>
-          <div className='custom_color_box'>
+        <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white'}}>
+          <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "10px"}}>
             <div>Image Colors</div>
   
-            <div className='custom_color_palette'>
+            <div className='color_palette'>
               {
                 color_context.color.map((c, ind) => (
                   <div
                     key={ind + 20}
                     id = {ind + 20}
                     style = {{backgroundColor: `rgb(${c.r},${c.g},${c.b})`}}
-                    className = {`custom_color ${selected_color_ind === String(ind + 20)? 'highlight':''}`}
+                    className = {`colors ${selected_color_ind === String(ind + 20)? 'highlight':''}`}
                     onClick={selecting_color}
                   >
                   </div>
@@ -74,15 +74,15 @@ export function DefaultColor(){
     };
     
     return (
-      <div className='default_color_container'>
-        <div className='default_color_box'>
+      <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white'}}>
+        <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "10px"}}>
           <div>Default Colors</div>
   
-          <div className='default_color_palette'>
+          <div className='color_palette'>
             {default_color_scheme.map((color, ind) => (
               <div 
                 id = {ind}
-                className = {`custom_color ${selected_color_ind === String(ind)? 'highlight':''}`}
+                className = {`colors ${selected_color_ind === String(ind)? 'highlight':''}`}
                 onClick={selecting_color}
                 key={ind} 
                 style={{backgroundColor: color}}>
