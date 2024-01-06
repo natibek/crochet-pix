@@ -27,9 +27,6 @@ async function process_image_api_call(requestData, width, height){
     };
   
     try {
-  
-        // last_chunk = chunk_size_slider.value;
-        // last_stride = stride_slider.value;
         const response = await fetch(api_url + "/process_image", requestOptions);
   
         if (!response.ok){
@@ -37,7 +34,7 @@ async function process_image_api_call(requestData, width, height){
         }
   
         const processed_image_data = await response.json();
-        return processed_image_data
+        return processed_image_data;
   
     }
     catch(error) {

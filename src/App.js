@@ -16,37 +16,6 @@ export const DimContext = createContext();
 
 export const api_url = "http://127.0.0.1:5000/api";
 
-// async function fill_image_api_call(image_data, source, target_color, width, height){
-//   let requestOptions = {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       },
-//     body: JSON.stringify({
-//       image_data: (image_data), 
-//       source: (source), 
-//       target_color: (target_color), 
-//       width: (width), 
-//       height: (height)
-//     })
-//   };
-//   console.log(requestOptions)
-//   try{
-//     const response = await fetch(api_url + "/fill", requestOptions);
-
-//     if (!response.ok){
-//       throw new Error("Error with POST 2");
-//     }
-
-//     const filled_img = await response.json();
-//     return filled_img;
-//   }
-//   catch(error){
-//     throw error;
-//   }
-// }
-
-
 //Contexts for color, tool, state of processing, and processed image
 const SelectedColorContextProvider = ({children}) => {
   const [selected_color, set_selected_color] = useState(null);
@@ -136,19 +105,19 @@ export default function App() {
         <ToolContextProvider>  
           <IsProcessedContextProvider>
             <ImageContextProvider>
+
                 <Nav />
-                <div className='row'>
-                  <div className='d-flex col col-4 d-flex justify-content-end align-items-start p-4'>
-                    <div className='flex-col-center' style={{gap: "15px", width: 'fit-content'}}>  
-                      <Tool />
-                      <DefaultColor />
-                      <CustomColor />
-                    </div> 
-                  </div>
-                  <div className='col col-8 flex-row-center'>
-                    <Display />
-                  </div>
+              
+                <div className='d-flex justify-content-center align-itmes-start' style={{gap: "15px"}}>  
+                  <Tool />
+                  <DefaultColor />
+                  <CustomColor />
+                </div> 
+                
+                <div className='flex-row-center'>
+                  <Display />
                 </div>
+                
             </ImageContextProvider>
           </IsProcessedContextProvider>
         </ToolContextProvider>

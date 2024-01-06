@@ -6,11 +6,6 @@ body {
   box-sizing: border-box;
   background-color: rgb(255,235, 210);
 }
-.nav_bar {
-  list-style: none;
-  display: flex;
-  justify-content: space-evenly;
-}
 
 .bg-light-grey {
   background-color: rgb(200,200,200);
@@ -59,18 +54,13 @@ body {
   height: 15px;
 }
 
-.colors:hover {
-  color: red;
-}
-/* pixel grid */
-
 .grid_container {
   gap: 20px;
   z-index: 0;
   position: relative;
   color: black;
 }
-
+/* grid container also has the reset, inputs and submit */
 .canvas {
   display: flex;
   max-width: 700px;
@@ -79,6 +69,7 @@ body {
   border-radius: 20px;
   overflow: auto;
 }
+/* grid is within canvas */
 
 .grid_display {
   padding: 20px;
@@ -87,6 +78,7 @@ body {
   gap: 5px;
   column-gap: 10px;
 }
+/* pixel art section is the grid display */
 
 .grid_box {
   padding: 20px;
@@ -100,20 +92,19 @@ body {
 }
 
 /* pixel grid */
-.left_count,
-.right_count {
-  display: grid;
-  row-gap: 7.4px;
+
+.pix {
+  border-width: 2px;
+  border-style: solid;
+  width: 15px;
+  height: 15px;
 }
 
-.top_count,
-.bottom_count {
-  display: flex;
-  justify-content: left;
-  margin-left: 54px;
+.pix:hover,
+.highlight,
+.colors:hover {
+  color: red;
 }
-
-
 
 
 .not_loading {
@@ -159,30 +150,32 @@ body {
 
 }
 
-#grid_width,
-#grid_height {
-  width: 50px;
-}
-
-.pix {
-  border-width: 2px;
-  border-style: solid;
-  width: 15px;
-  height: 15px;
-}
-
 .count_lr {
-  border-style: solid;
   width: 30px;
-  height: 15px;
-  font-size: 16px;
+  height: 20px;
   color: black;
   background-color: white;
+  text-align: center;
 }
-.count_lr_em{
-  content: ' ';
+
+.count_lr_em {
+  /* content: ''; */
   width: 30px;
-  height: 15px;
+  height: 20px;
+  color: black;
+
+}
+
+.left_right {
+  display: flex;
+  align-items: start;
+}
+
+.right_count,
+.left_count {
+  display: flex;
+  flex-direction: column;
+  margin-top: 17px;
 }
 
 .count_ud {
@@ -192,27 +185,14 @@ body {
   background-color: white;
 }
 
-.pix:hover,
-.highlight {
-  color: red;
-}
-
-/* .upload {
+.up_down {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 150px;
-  height: fit-content;
-  border-style: solid;
-  border-radius: 10px;
-  box-shadow: 5px 5px 15px 5px #7E6D5766;
-
+  flex-direction: column;
+}
+.top_count,
+.bottom_count {
+  display: flex;
+  margin-left: 49px;
 }
 
-.upload:hover {
-  background-color: aliceblue;
-}
 
-#image_input {
-
-} */

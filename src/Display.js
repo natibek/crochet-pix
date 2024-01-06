@@ -4,17 +4,15 @@ import fill from "./assets/fill.svg";
 
 export default function Display(){
 
-    const [mouse_pressed, set_mouse_pressed] = useState(false);
-    // const [user_width, set_user_width] = useState('15');
-    // const [user_height, set_user_height] = useState('15');
-  
+    const [mouse_pressed, set_mouse_pressed] = useState(false);  
     const {dims, set_dims} = useContext(DimContext);
     const img_context = useContext(ImageContext); 
     const {is_processed, set_is_processed} = useContext(IsProcessedContext);
     const tool_context = useContext(ToolContext);
     const selected_color_context = useContext(SelectedColorContext);
     let ncols = dims.user_width; 
-    let display_pixel_data = Array(dims.user_width*dims.user_height).fill({r:255, g: 255, b:255});
+    const [ display_pixel_data, set_display_pixel_data ] = useState(Array(dims.user_width*dims.user_height).fill({r:255, g: 255, b:255}))
+    // let display_pixel_data = Array(dims.user_width*dims.user_height).fill({r:255, g: 255, b:255});
       
     let left_count = [];
     let right_count = [];
@@ -40,14 +38,15 @@ export default function Display(){
     const left_count_div = (
       <div className='left_count'>
         {left_count.map((c, ind) => (
-          (c === '-') ? <div className='count_lr_em' key={ind}></div> : <div className='flex-row-center count_lr' key={ind}>{c}</div>
+          (c === '-') ? <div className='count_lr_em' key={ind}></div> : <div className='flex-row-center count_lr text-center' key={ind}>{c}</div>
+
         ))}
       </div>
     );
     const right_count_div = (
       <div className='right_count'>
         {right_count.map((c, ind) => (
-          (c === '-') ? <div className='count_lr_em' key={ind}></div> : <div className='flex-row-center count_lr' key={ind}>{c}</div>
+          (c === '-') ? <div className='count_lr_em' key={ind}></div> : <div className='flex-row-center count_lr text-center' key={ind}>{c}</div>
   
         ))}
       </div>
@@ -55,27 +54,39 @@ export default function Display(){
     const top_count_div = (
       <div className='top_count'>
         {top_count.map((c, ind) => (
-          <div className='flex-row-center count_ud ' key={ind}>{c}</div>
+          <div className='flex-row-center count_ud text-center' key={ind}>{c}</div>
         ))}
       </div>
     );
     const bottom_count_div = (
       <div className='bottom_count'>
         {bottom_count.map((c, ind) => (
-          <div className='flex-row-center count_ud ' key={ind}>{c}</div>
+          <div className='flex-row-center count_ud text-center' key={ind}>{c}</div>
         ))}
       </div>
     );
-  
-    if (is_processed === "Yes"){
-      display_pixel_data = img_context.processed_pixel_data.flat();
-      ncols = img_context.processed_pixel_data[0].length;
-      set_dims({
-        user_width: img_context.processed_pixel_data[0].length,
-        user_height: img_context.processed_pixel_data.length
-      });
-    } 
-    
+
+    useEffect( () => {
+      if (is_processed === "Yes"){
+        const pixels = document.getElementsByClassName('pix');
+        const pixelArray = Array.from(pixels);
+        
+        pixelArray.forEach((pix, _) => {
+          if (pix){
+            pix.style.backgroundColor = 'white';
+          }
+        });
+      
+        set_display_pixel_data(img_context.processed_pixel_data.flat());
+        console.log(img_context.processed_pixel_data.flat());
+        ncols = img_context.processed_pixel_data[0].length;
+        set_dims({
+          user_width: img_context.processed_pixel_data[0].length,
+          user_height: img_context.processed_pixel_data.length
+        });
+      } 
+    }, [is_processed])
+      
     const paint = (event) => {
       if (tool_context.tool === "Pixel"){
         if (selected_color_context.selected_color){
@@ -96,13 +107,15 @@ export default function Display(){
       if (tool_context.tool === "Brush" && mouse_pressed){
         if (selected_color_context.selected_color){
           event.target.style.backgroundColor = selected_color_context.selected_color;
-          let new_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
-          new_color = {
-            r: Number(new_color[0]),
-            g: Number(new_color[1]),
-            b: Number(new_color[2])
-          };
-          display_pixel_data[Number(event.target.id)] = new_color;
+          // let new_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
+          // new_color = {
+          //   r: Number(new_color[0]),
+          //   g: Number(new_color[1]),
+          //   b: Number(new_color[2])
+          // };
+
+          // let temp = display_pixel_data;
+          // temp[Number(event.target.id)] = new_color;
         } 
       } 
     };
@@ -128,15 +141,8 @@ export default function Display(){
   
       const width_input = document.getElementById('grid_width');
       const height_input = document.getElementById('grid_height');
-      const pixels = document.getElementsByClassName('pix');
-      const pixelArray = Array.from(pixels);
-  
-      pixelArray.forEach((pix, _) => {
-        if (pix){
-          pix.style.backgroundColor = 'white';
-        }
-      });
-    
+
+      set_display_pixel_data(Array(15*15).fill({r:255, g: 255, b:255}))
       width_input.value = 15;
       height_input.value = 15;
     };
@@ -146,14 +152,14 @@ export default function Display(){
       <div className='grid_container flex-col-center' style={{width: 'fit-content'}} >
   
         <div className='canvas shadows_big' id ="scrolling_canvas">
-          <div className='make_scroll' id = "grid_pixelated_image">  
-  
+          <div id = "grid_pixelated_image">  
+          {/* this extends the background to make the scrolling work  */}
             <div className= {`grid_box ${is_processed === "Processing" ? 'processing' : ''}`}>
   
               <div className='up_down'>
                 {top_count_div}
   
-                <div className='left_right flex-row-center'>
+                <div className='left_right'>
                   {left_count_div}
   
                   <div 
@@ -197,26 +203,25 @@ export default function Display(){
             </div>
         </div>
 
-        <div className= {
-        `flex-row-center ${is_processed === "Processing" ? 'not_loading' : ''}`} style={{gap: "20px"}}>
+        <div className= {`flex-row-center ${is_processed === "Processing" ? 'not_loading' : ''}`} style={{gap: "20px", marginBottom: "20px"}}>
           
           <button className='btn bg-light-grey' id = 'reset_button' onClick={reset_grid}>Reset</button>
   
-        <div className={
-        `flex-row-center ${is_processed === "Yes" ? 'not_loading' : ''}`} style={{gap: "10px"}}>
-        
-          <div className='flex-row-center'>    
-            <label htmlFor = "grid_width">Width:</label>
-            <input type='text' id='grid_width' defaultValue =  {dims.user_width} className="text-center mx-2"></input>
-          </div>
-  
-          <div className='flex-row-center'>    
-            <label htmlFor = "grid_height">Height:</label>
-            <input type='text' id= 'grid_height' defaultValue= {dims.user_height} className="text-center mx-2"></input>
-          </div>
+          <div className={
+          `flex-row-center ${is_processed === "Yes" ? 'not_loading' : ''}`} style={{gap: "10px"}}>
           
-          <button className='btn bg-light-grey' onClick={set_dim}> Submit </button>
-        </div>
+            <div className='flex-row-center'>    
+              <label htmlFor = "grid_width">Width:</label>
+              <input type='text' id='grid_width' defaultValue =  {dims.user_width} className="text-center mx-2" style={{width: "50px"}}></input>
+            </div>
+    
+            <div className='flex-row-center'>    
+              <label htmlFor = "grid_height">Height:</label>
+              <input type='text' id= 'grid_height' defaultValue= {dims.user_height} className="text-center mx-2" style={{width: "50px"}}></input>
+            </div>
+            
+            <button className='btn bg-light-grey' onClick={set_dim}> Submit </button>
+          </div>
         </div>
         
       </div>
