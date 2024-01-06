@@ -1,6 +1,8 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { IsProcessedContext, ImageContext, ColorContext } from './App';
 import { api_url } from './App';
+import { Modal } from 'react-bootstrap';
+import ReactCrop from 'react-image-crop'
 
 async function process_image_api_call(requestData, width, height){
     /*
@@ -51,8 +53,11 @@ export default function UploadButton(){
     const img_context = useContext(ImageContext);
     const is_processed_context = useContext(IsProcessedContext);
     const color_context = useContext(ColorContext);
-    const [raw_img, set_raw_image] = useState([]);
-  
+    const [ raw_img, set_raw_img ] = useState({img: null, width: null, height: null});
+    const [ crop, set_crop ] = useState(false);
+    const [ cropTool, setCropTool ] = useState();
+    const [ img, set_img ] = useState();
+
     const image_upload = (event) => {
       let file = event.target.files[0];
       
@@ -66,21 +71,18 @@ export default function UploadButton(){
           image.src = file_reader.result;
   
           image.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = image.width;
-            canvas.height = image.height;
+            set_img(image);
+            set_crop(true);
             
-            const canvas_context = canvas.getContext("2d", { willReadFrequently: true });
-            canvas_context.drawImage(image, 0, 0);
+            setTimeout(() => {
+              const image_element = document.getElementById('crop_image');
+              image_element.src = image.src;
+              setCropTool(null);
+            }, 0);
             
-            let request_data = canvas_context.getImageData(0,0,canvas.width, canvas.height).data;
-  
-            if (request_data){
-              set_raw_image({img: request_data, width: image.width, height: image.height});          
-            }
           };
         };
-      };
+      }
   
     };
   
@@ -88,6 +90,7 @@ export default function UploadButton(){
       // Use the updated state values here to make api call
       if (raw_img.img){
         is_processed_context.set_is_processed("Processing");
+
         try {
           process_image_api_call(
             raw_img.img, 
@@ -106,12 +109,59 @@ export default function UploadButton(){
   
       }
     }, [raw_img]);
-  
+    
+    const submitCrop = () => {    
+      const image_element = document.getElementById('crop_image');
+      set_crop(false);
+
+      const aspectRatio =  img.width / image_element.width;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const crop_width = cropTool.width * aspectRatio;
+      const crop_height = cropTool.height * aspectRatio;
+      console.log(img.width, img.height)
+      console.log(cropTool.width, cropTool.height)
+      console.log(crop_width, crop_height)
+      
+      const canvas_context = canvas.getContext("2d", { willReadFrequently: true });
+      canvas_context.drawImage(img, 0, 0);
+      
+      const request_data = canvas_context.getImageData(cropTool.x, cropTool.y, crop_width, crop_height).data;
+      console.log(request_data)
+      
+      set_raw_img({img: request_data, width: crop_width, height: crop_height})
+    };
+
+
     return (
+      <>
       <div className='upload'>
         <label htmlFor='image_input' className='btn bg-light-grey'> Upload Image </label>
         <input type="file" style={{display: 'none'}} id = "image_input" accept='image/*' onChange={image_upload}/>
       </div>
+
+      <Modal show = {crop} onHide={ ()=> { set_crop( !crop ) } } centered className='position-absolute start-50 top-50 translate-middle'>
+        <Modal.Header closeButton >
+          Crop Image
+        </Modal.Header>
+        
+        <Modal.Body > 
+          <div id="crop_field" className='flex-row-center border border-2' style={{minWidth: "300px", maxWidth: "700px"}}> 
+            <ReactCrop crop={ cropTool } onChange={c => setCropTool(c)}>
+              <img id = "crop_image"/>
+            </ReactCrop>
+          </div>
+        </Modal.Body>
+
+        <Modal.Footer className='flex-row-center'>
+          <button onClick={submitCrop} className='btn bg-light-grey'>
+            Submit
+          </button>
+        </Modal.Footer>
+      </Modal>
+      </>
     );
   }
   

@@ -78,7 +78,6 @@ export default function Display(){
         });
       
         set_display_pixel_data(img_context.processed_pixel_data.flat());
-        console.log(img_context.processed_pixel_data.flat());
         ncols = img_context.processed_pixel_data[0].length;
         set_dims({
           user_width: img_context.processed_pixel_data[0].length,
@@ -123,11 +122,29 @@ export default function Display(){
     const set_dim = () => {
       const width_input = document.getElementById('grid_width');
       const height_input = document.getElementById('grid_height');
-  
-      set_dims({
-        user_width: width_input.value,
-        user_height: height_input.value
-      })
+      
+      let temp = display_pixel_data;
+      if (width_input.value * height_input.value > dims.user_width * dims.user_height){
+        let diff = width_input.value * height_input.value - dims.user_width * dims.user_height
+        let newPixels = Array(diff).fill({r:255, g: 255, b:255});
+        let temp = [...display_pixel_data, ...newPixels];
+        set_display_pixel_data(temp);
+        set_dims({
+          user_width: width_input.value,
+          user_height: height_input.value
+        });
+      }
+      else if ((width_input.value * height_input.value < dims.user_width * dims.user_height)){
+        let temp = display_pixel_data.slice(0, width_input.value * height_input.value);
+        set_display_pixel_data(temp);
+        set_dims({
+          user_width: width_input.value,
+          user_height: height_input.value
+        });
+      }
+      
+
+
     };
   
     const reset_grid = () => {
@@ -147,6 +164,14 @@ export default function Display(){
       height_input.value = 15;
     };
   
+    if (is_processed === "Processing"){
+      return (
+        <div className = 'flex-col-center loading rounded shadows_big p-5 my-3'>
+        <div>Pixelating</div>
+        <div id = "loading_img"><img  src={fill} width='300px' alt='Loading'/></div>            
+      </div>
+      );
+    }
   
     return (
       <div className='grid_container flex-col-center' style={{width: 'fit-content'}} >
@@ -154,7 +179,7 @@ export default function Display(){
         <div className='canvas shadows_big' id ="scrolling_canvas">
           <div id = "grid_pixelated_image">  
           {/* this extends the background to make the scrolling work  */}
-            <div className= {`grid_box ${is_processed === "Processing" ? 'processing' : ''}`}>
+              <div className= 'grid_box'>
   
               <div className='up_down'>
                 {top_count_div}
@@ -194,13 +219,7 @@ export default function Display(){
             </div>  
             {/* Grid box */}
           </div>
-          <div 
-              className = {`${is_processed === "Processing" ? 'loading' : 'not_loading'}`}
-            >
-              <div>Pixelating</div>
-              <div id = "loading_img"><img  src={fill} width='300px' alt='Loading'/></div>
-              
-            </div>
+
         </div>
 
         <div className= {`flex-row-center ${is_processed === "Processing" ? 'not_loading' : ''}`} style={{gap: "20px", marginBottom: "20px"}}>

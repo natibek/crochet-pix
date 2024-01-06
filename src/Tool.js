@@ -38,16 +38,16 @@ export default function Tool(){
   
     return (
       
-      <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white'}}>
+      <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content'}}>
         <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "20px"}}>
           <div>Tools</div>
           <div className='d-flex justify-content-center align-items-center' style={{gap: "40px"}}>
-            <div className='tools' id='pixel_tool' onClick={tool_select}> 
-              <img src={dot} id = "pixel_img" alt='' width='25px'/>
+            <div className='tools' id='pixel_tool' onClick={tool_select} title='Pixel: paint one pixel at a time'> 
+              <img src={dot} id = "pixel_img"  alt='' width='25px'/>
   
             </div>
   
-            <div className='flex-row-center tools' id='brush_tool' onClick={tool_select}> 
+            <div className='flex-row-center tools' id='brush_tool' onClick={tool_select} title='Brush: drag over multiple pixels to paint'> 
               <img src= {brush} id = "brush_img" alt='' width='25px' />
             </div>
           </div>

@@ -20,7 +20,7 @@ export function CustomColor(){
   
     if (color_context.color){
       return (
-        <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white'}}>
+        <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content'}}>
           <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "10px"}}>
             <div>Image Colors</div>
   
@@ -74,7 +74,7 @@ export function DefaultColor(){
     };
     
     return (
-      <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white'}}>
+      <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content'}}>
         <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "10px"}}>
           <div>Default Colors</div>
   

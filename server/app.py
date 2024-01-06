@@ -11,8 +11,8 @@ CORS(app)
 def process_image():
     req = request.get_json()
     original_pixel_data = list(req['image'].values())
-    width = req['width']
-    height = req['height']
+    width = int(req['width'])
+    height = int(req['height'])
 
     imageProcesser.preprocess(original_pixel_data, width, height)
     imageProcesser.shrink(width, height)

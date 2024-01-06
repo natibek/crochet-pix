@@ -47,14 +47,17 @@ class ImageProcessor():
     
     def reduce(self, matrix):
         lst = np.array(matrix).flat
-        red_total = blue_total = green_total = 0
+        if len(lst) > 0:
+            red_total = blue_total = green_total = 0
 
-        for color in lst:
-            red_total += color['r']
-            blue_total += color['b']
-            green_total += color['g']
+            for color in lst:
+                red_total += color['r']
+                blue_total += color['b']
+                green_total += color['g']
 
-        return {'r': red_total/len(lst), 'g': green_total/len(lst), 'b': blue_total/len(lst)}
+            return {'r': red_total/len(lst), 'g': green_total/len(lst), 'b': blue_total/len(lst)}
+        
+        return False
     
     def shrink(self, width, height):
 
@@ -75,6 +78,8 @@ class ImageProcessor():
                 curSubset = self.preprocessed[row:rowEnd, col:colEnd]
                 newPixel = self.reduce(curSubset)
 
+                if not newPixel:
+                    continue
                 if not self.inColorScheme(newPixel) or len(self.colorScheme) == 0:
                     self.colorScheme.append(newPixel)
                 else:
