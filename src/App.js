@@ -5,7 +5,6 @@ import Tool from './Tool';
 import { DefaultColor, CustomColor } from './Color';
 import Display from './Display';
 import Nav from './Nav';
-import { Modal } from 'react-bootstrap';
 
 export const ImageContext = createContext(null);
 export const IsProcessedContext = createContext();
@@ -138,7 +137,7 @@ export default function App() {
                   <footer className='flex-col-center py-2' style={{backgroundColor: 'white', marginTop: 'auto'}}>
                     <div className='px-3'> 
                       Nathnael Bekele 
-                      &nbsp;  <a href='https://www.linkedin.com/in/nathnael-bekele-2b240b257' target='_blank' rel='noreferrer'> <i class="bi bi-linkedin"></i></a> 
+                      &nbsp;  <a href='https://www.linkedin.com/in/nathnael-bekele-2b240b257' target='_blank' rel='noreferrer'> <i className="bi bi-linkedin"></i></a> 
                       &nbsp; <a href='https://github.com/natibek' target='_blank' rel='noreferrer'> <i className='bi bi-github'></i></a>
                     </div>
                     <br />

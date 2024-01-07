@@ -83,6 +83,7 @@ export default function UploadButton(){
           };
         };
       }
+      event.target.value = null;
   
     };
   
@@ -133,8 +134,8 @@ export default function UploadButton(){
 
     return (
       <>
-      <div className='upload'>
-        <label htmlFor='image_input' className='btn bg-light-grey'> Upload Image </label>
+      <div>
+        <label htmlFor='image_input' className='btn bg-light-grey'> Upload Picture </label>
         <input type="file" style={{display: 'none'}} id = "image_input" accept='image/*' onChange={image_upload}/>
       </div>
 

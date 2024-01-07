@@ -86,6 +86,9 @@ export default function Display(){
           user_height: img_context.processed_pixel_data.length
         });
       } 
+      else if (is_processed === 'Open'){
+        set_display_pixel_data(img_context.processed_pixel_data);
+      }
     }, [is_processed])
       
     const paint = (event) => {
@@ -186,46 +189,43 @@ export default function Display(){
       <div className='grid_container flex-col-center' style={{width: 'fit-content'}} >
   
         <div className='canvas shadows_big' id ="scrolling_canvas">
-          <div id = "grid_pixelated_image">  
-          {/* this extends the background to make the scrolling work  */}
-              <div className= 'grid_box'>
-  
-              <div className='up_down'>
-                {top_count_div}
-  
-                <div className='left_right'>
-                  {left_count_div}
-  
-                  <div 
-                    draggable="false"
-                    className='grid_display' 
-                    style={{'--num-cols': ncols}} 
-                    onMouseDown={ () => set_mouse_pressed(true) }
-                    onMouseUp={ () => set_mouse_pressed(false) }
-                  >
-                    {
-                      display_pixel_data.map((pixel_val, ind) => (
-                        <div 
-                          draggable="false"
-                          key = {ind}
-                          id = {ind} 
-                          className='pix' 
-                          style={{backgroundColor: `rgb(${pixel_val.r},${pixel_val.g},${pixel_val.b})`}}
-                          onClick= {is_processed === "Processing" ? () => {} : paint}
-                          onMouseMove= {is_processed === "Processing" ? () => {} : paint_multiple}
-                          onDrag= {is_processed === "Processing" ? () => {} : ()=> set_mouse_pressed(false)}
-                          >
-                        </div>
-                      ))
-              
-                    }
-                  </div>
-                  {right_count_div}
-  
-                </div>
-                {bottom_count_div}
+          <div className= 'grid_box' id='grid'>
+
+          <div className='up_down'>
+            {top_count_div}
+
+            <div className='left_right'>
+              {left_count_div}
+
+              <div 
+                draggable="false"
+                className='grid_display' 
+                style={{'--num-cols': ncols}} 
+                onMouseDown={ () => set_mouse_pressed(true) }
+                onMouseUp={ () => set_mouse_pressed(false) }
+              >
+                {
+                  display_pixel_data.map((pixel_val, ind) => (
+                    <div 
+                      draggable="false"
+                      key = {ind}
+                      id = {ind} 
+                      className='pix' 
+                      style={{backgroundColor: `rgb(${pixel_val.r},${pixel_val.g},${pixel_val.b})`}}
+                      onClick= {is_processed === "Processing" ? () => {} : paint}
+                      onMouseMove= {is_processed === "Processing" ? () => {} : paint_multiple}
+                      onDrag= {is_processed === "Processing" ? () => {} : ()=> set_mouse_pressed(false)}
+                      >
+                    </div>
+                  ))
+                }
               </div>
-            </div>  
+              {right_count_div}
+
+            </div>
+            {bottom_count_div}
+          </div>
+              
             {/* Grid box */}
           </div>
 

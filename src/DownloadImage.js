@@ -1,21 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { toJpeg } from 'html-to-image';
-import html2canvas from 'html2canvas';
-import { latest_img } from "./Display";
 
 export default function DownloadImage(){
-    // function create_export_image(){
-    //   const export_img = (
 
-    //   );
-    // }
+    const [ downloading, set_downloading ] = useState(false);
+
     const download =  (e) => {
 
       // create_export_image();
-      const target_div = document.getElementById("grid_pixelated_image");
-      const export_clone = target_div.cloneNode(true);
-
-      console.log(export_clone);
+      set_downloading(true)
+      const target_div = document.getElementById("scrolling_canvas");
+      target_div.style.overflow = 'none';
+      target_div.style.maxHeight = 'fit-content';
+      target_div.style.maxWidth = 'fit-content';
+      
   
       toJpeg(target_div)
       .then(function (dataUrl) {
@@ -25,19 +23,28 @@ export default function DownloadImage(){
         link.click();
       });
 
-      html2canvas(export_clone)
-      .then( canvas => {
-        const dataUrl = canvas.toDataURL('image/jpeg');
-        
-        const link = document.createElement('a');
-        link.href = dataUrl;
-        link.download = 'cloned.jpeg'
-        link.click();
-      })
+      
+      setTimeout(() => {
+        target_div.style.overflow = 'auto';
+        target_div.style.maxHeight = '550px';
+        target_div.style.maxWidth = '700px';
+      }, 0);
     };
 
     return (
+      <>
       <button className="btn bg-light-grey" id = 'download_button' onClick={download}>Download</button>
+
+      {
+        downloading ? 
+          <div className="">
+          
+          </div>
+        :
+
+        <></>
+      }
+      </>
     );
   }
   
