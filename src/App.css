@@ -8,7 +8,7 @@ body {
 }
 
 .bg-light-grey {
-  background-color: rgb(200,200,200);
+  background-color: rgb(210,210,210);
 }
 
 .flex-row-center {
@@ -125,12 +125,9 @@ body {
 
 @keyframes sway {
   0%, 100%{
-    transform: rotate(0deg);
-  }
-  25% {
     transform: rotate(-45deg);
   }
-  75% {
+  50% {
     transform: rotate(45deg);
   }
 

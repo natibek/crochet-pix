@@ -1,6 +1,8 @@
 import { useContext, useState, useEffect } from "react";
 import { DimContext, ImageContext, ToolContext, SelectedColorContext, IsProcessedContext } from "./App"
 import fill from "./assets/fill.svg";
+import { signal } from "@preact/signals";
+export const latest_img = signal();
 
 export default function Display(){
 
@@ -12,8 +14,7 @@ export default function Display(){
     const selected_color_context = useContext(SelectedColorContext);
     let ncols = dims.user_width; 
     const [ display_pixel_data, set_display_pixel_data ] = useState(Array(dims.user_width*dims.user_height).fill({r:255, g: 255, b:255}))
-    // let display_pixel_data = Array(dims.user_width*dims.user_height).fill({r:255, g: 255, b:255});
-      
+    
     let left_count = [];
     let right_count = [];
     let top_count = [];
@@ -78,6 +79,7 @@ export default function Display(){
         });
       
         set_display_pixel_data(img_context.processed_pixel_data.flat());
+        latest_img.value = img_context.processed_pixel_data.flat();
         ncols = img_context.processed_pixel_data[0].length;
         set_dims({
           user_width: img_context.processed_pixel_data[0].length,
@@ -90,13 +92,16 @@ export default function Display(){
       if (tool_context.tool === "Pixel"){
         if (selected_color_context.selected_color){
           event.target.style.backgroundColor = selected_color_context.selected_color;
-          // let new_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
-          // new_color = {
-          //   r: Number(new_color[0]),
-          //   g: Number(new_color[1]),
-          //   b: Number(new_color[2])
-          // };
-          // display_pixel_data[Number(event.target.id)] = new_color;
+          let new_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
+          new_color = {
+            r: Number(new_color[0]),
+            g: Number(new_color[1]),
+            b: Number(new_color[2])
+          };
+
+          let temp = display_pixel_data;
+          temp[Number(event.target.id)] = new_color;
+          latest_img.value = temp;
         } 
       } 
       
@@ -106,15 +111,16 @@ export default function Display(){
       if (tool_context.tool === "Brush" && mouse_pressed){
         if (selected_color_context.selected_color){
           event.target.style.backgroundColor = selected_color_context.selected_color;
-          // let new_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
-          // new_color = {
-          //   r: Number(new_color[0]),
-          //   g: Number(new_color[1]),
-          //   b: Number(new_color[2])
-          // };
+          let new_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
+          new_color = {
+            r: Number(new_color[0]),
+            g: Number(new_color[1]),
+            b: Number(new_color[2])
+          };
 
-          // let temp = display_pixel_data;
-          // temp[Number(event.target.id)] = new_color;
+          let temp = display_pixel_data;
+          temp[Number(event.target.id)] = new_color;
+          latest_img.value = temp;
         } 
       } 
     };
@@ -129,6 +135,7 @@ export default function Display(){
         let newPixels = Array(diff).fill({r:255, g: 255, b:255});
         let temp = [...display_pixel_data, ...newPixels];
         set_display_pixel_data(temp);
+        latest_img.value = temp;
         set_dims({
           user_width: width_input.value,
           user_height: height_input.value
@@ -137,6 +144,8 @@ export default function Display(){
       else if ((width_input.value * height_input.value < dims.user_width * dims.user_height)){
         let temp = display_pixel_data.slice(0, width_input.value * height_input.value);
         set_display_pixel_data(temp);
+        latest_img.value = temp;
+
         set_dims({
           user_width: width_input.value,
           user_height: height_input.value

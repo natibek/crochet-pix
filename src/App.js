@@ -5,6 +5,7 @@ import Tool from './Tool';
 import { DefaultColor, CustomColor } from './Color';
 import Display from './Display';
 import Nav from './Nav';
+import { Modal } from 'react-bootstrap';
 
 export const ImageContext = createContext(null);
 export const IsProcessedContext = createContext();
@@ -97,6 +98,21 @@ const DimContextProvider = ({children}) => {
 
 export default function App() {
 
+  useEffect( ()=>{
+    const handleBeforeUnload = (e) => {
+      const message = "Reloading/leaving the site will lead to data loss. Make sure you have saved all your progress.";
+      e.returnValue = message;
+      return message; 
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+
+  }, [] )
+
+
   return (
     <DimContextProvider>
     <SelectedColorContextProvider>
@@ -105,19 +121,30 @@ export default function App() {
         <ToolContextProvider>  
           <IsProcessedContextProvider>
             <ImageContextProvider>
-
-                <Nav />
-              
-                <div className='d-flex justify-content-center align-itmes-start' style={{gap: "15px"}}>  
-                  <Tool />
-                  <DefaultColor />
-                  <CustomColor />
-                </div> 
+                <div>
+                  <Nav />
                 
-                <div className='flex-row-center'>
-                  <Display />
+                  <div className='d-flex justify-content-center align-itmes-start' style={{gap: "15px"}}>  
+                    <Tool />
+                    <DefaultColor />
+                    <CustomColor />
+                  </div> 
+                  
+                  <div className='flex-row-center'>
+                    <Display />
+                  </div>
+                  
+                  <br />
+                  <footer className='flex-col-center py-2' style={{backgroundColor: 'white', marginTop: 'auto'}}>
+                    <div className='px-3'> 
+                      Nathnael Bekele 
+                      &nbsp;  <a href='https://www.linkedin.com/in/nathnael-bekele-2b240b257' target='_blank' rel='noreferrer'> <i class="bi bi-linkedin"></i></a> 
+                      &nbsp; <a href='https://github.com/natibek' target='_blank' rel='noreferrer'> <i className='bi bi-github'></i></a>
+                    </div>
+                    <br />
+                    <div> &copy; January 2024</div>
+                  </footer>
                 </div>
-                
             </ImageContextProvider>
           </IsProcessedContextProvider>
         </ToolContextProvider>

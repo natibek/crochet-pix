@@ -121,15 +121,11 @@ export default function UploadButton(){
       canvas.height = img.height;
       const crop_width = cropTool.width * aspectRatio;
       const crop_height = cropTool.height * aspectRatio;
-      console.log(img.width, img.height)
-      console.log(cropTool.width, cropTool.height)
-      console.log(crop_width, crop_height)
       
       const canvas_context = canvas.getContext("2d", { willReadFrequently: true });
       canvas_context.drawImage(img, 0, 0);
       
       const request_data = canvas_context.getImageData(cropTool.x, cropTool.y, crop_width, crop_height).data;
-      console.log(request_data)
       
       set_raw_img({img: request_data, width: crop_width, height: crop_height})
     };
@@ -156,9 +152,9 @@ export default function UploadButton(){
         </Modal.Body>
 
         <Modal.Footer className='flex-row-center'>
-          
+
           {
-            crop !== null ? 
+            cropTool !== null ? 
             <button onClick={submitCrop} className='btn bg-light-grey'>
               Submit
             </button>
