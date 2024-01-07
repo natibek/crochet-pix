@@ -156,9 +156,16 @@ export default function UploadButton(){
         </Modal.Body>
 
         <Modal.Footer className='flex-row-center'>
-          <button onClick={submitCrop} className='btn bg-light-grey'>
-            Submit
-          </button>
+          
+          {
+            crop !== null ? 
+            <button onClick={submitCrop} className='btn bg-light-grey'>
+              Submit
+            </button>
+            :
+            <></>
+          }
+          
         </Modal.Footer>
       </Modal>
       </>
