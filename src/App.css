@@ -2,9 +2,13 @@
   --num-cols: 20;
 }
 
+#root {
+  height: 100vh;
+}
 body {
   box-sizing: border-box;
   background-color: rgb(255,235, 210);
+  height: 100vh;
 }
 
 .bg-light-grey {

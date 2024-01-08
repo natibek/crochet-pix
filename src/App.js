@@ -120,21 +120,24 @@ export default function App() {
         <ToolContextProvider>  
           <IsProcessedContextProvider>
             <ImageContextProvider>
-                <div>
-                  <Nav />
-                
-                  <div className='d-flex justify-content-center align-itmes-start' style={{gap: "15px"}}>  
-                    <Tool />
-                    <DefaultColor />
-                    <CustomColor />
-                  </div> 
+                <div className='h-100'>
+                  <div className='h-100'>
+                    <Nav />
                   
-                  <div className='flex-row-center'>
-                    <Display />
+                    <div className='d-flex justify-content-center align-itmes-start' style={{gap: "15px"}}>  
+                      <Tool />
+                      <DefaultColor />
+                      <CustomColor />
+                    </div> 
+                    
+                    <div className='flex-row-center' >
+                      <Display />
+                    </div>
+                    
+                    <br />
                   </div>
-                  
-                  <br />
-                  <footer className='flex-col-center py-2' style={{backgroundColor: 'white', marginTop: 'auto'}}>
+                
+                  <footer className='flex-col-center p-2' style={{backgroundColor: 'white', marginTop: 'auto'}}>
                     <div className='px-3'> 
                       Nathnael Bekele 
                       &nbsp;  <a href='https://www.linkedin.com/in/nathnael-bekele-2b240b257' target='_blank' rel='noreferrer'> <i className="bi bi-linkedin"></i></a> 
