@@ -195,7 +195,7 @@ export default function Display(){
             {top_count_div}
 
             <div className='left_right'>
-              {left_count_div}
+            {right_count_div}
 
               <div 
                 draggable="false"
@@ -220,7 +220,7 @@ export default function Display(){
                   ))
                 }
               </div>
-              {right_count_div}
+              {left_count_div}
 
             </div>
             {bottom_count_div}

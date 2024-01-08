@@ -120,8 +120,8 @@ export default function App() {
         <ToolContextProvider>  
           <IsProcessedContextProvider>
             <ImageContextProvider>
-                <div className='h-100'>
-                  <div className='h-100'>
+                <div className='app_container' >
+                  <main>
                     <Nav />
                   
                     <div className='d-flex justify-content-center align-itmes-start' style={{gap: "15px"}}>  
@@ -135,10 +135,10 @@ export default function App() {
                     </div>
                     
                     <br />
-                  </div>
-                
-                  <footer className='flex-col-center p-2' style={{backgroundColor: 'white', marginTop: 'auto'}}>
-                    <div className='px-3'> 
+                  </main>
+                  
+                  <footer className='flex-col-center p-2' style={{backgroundColor: 'white', marginTop : 'auto'}}>
+                    <div className='w-100 flex-row-center px-3'> 
                       Nathnael Bekele 
                       &nbsp;  <a href='https://www.linkedin.com/in/nathnael-bekele-2b240b257' target='_blank' rel='noreferrer'> <i className="bi bi-linkedin"></i></a> 
                       &nbsp; <a href='https://github.com/natibek' target='_blank' rel='noreferrer'> <i className='bi bi-github'></i></a>
