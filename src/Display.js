@@ -71,6 +71,7 @@ export default function Display(){
 
     function add_right() {
       let temp = latest_img.value;
+      
       for (let i = (dims.user_height * dims.user_width) - 1 ; i >= 0; i -= dims.user_width){
         temp.splice(i+1,0,{r:255, g: 255, b:255})
       }
@@ -275,6 +276,7 @@ export default function Display(){
       } 
       else if (is_processed === 'Open'){
         set_display_pixel_data({data: img_context.processed_pixel_data});
+        latest_img.value = img_context.processed_pixel_data;
       }
     }, [is_processed])
       
@@ -311,27 +313,29 @@ export default function Display(){
     };
   
     const set_dim = () => {
-      const width_input = document.getElementById('grid_width');
-      const height_input = document.getElementById('grid_height');
-      
-      if (width_input.value * height_input.value > dims.user_width * dims.user_height){
-        let diff = width_input.value * height_input.value - dims.user_width * dims.user_height
+      const width = Number(document.getElementById('grid_width').value);
+      const height = Number(document.getElementById('grid_height').value);
+
+      if (width <= 0 || height <= 0) return; 
+
+      if (width * height > dims.user_width * dims.user_height){
+        let diff = width * height - dims.user_width * dims.user_height
         let newPixels = Array(diff).fill({r:255, g: 255, b:255});
         latest_img.value = [...latest_img.value, ...newPixels];
         set_display_pixel_data({data:latest_img.value});
         
         set_dims({
-          user_width: width_input.value,
-          user_height: height_input.value
+          user_width: width,
+          user_height: height
         });
       }
-      else if ((width_input.value * height_input.value < dims.user_width * dims.user_height)){
-        latest_img.value = latest_img.value.slice(0, width_input.value * height_input.value);
-        set_display_pixel_data({data:latest_img.value});
+      else if ((width * height < dims.user_width * dims.user_height)){
+        latest_img.value = latest_img.value.slice(0, width * height);
+        set_display_pixel_data({data: latest_img.value});
 
         set_dims({
-          user_width: width_input.value,
-          user_height: height_input.value
+          user_width: width,
+          user_height: height
         });
       }
     };
@@ -416,17 +420,16 @@ export default function Display(){
           
           <button className='btn bg-light-grey' id = 'reset_button' onClick={reset_grid}>Reset</button>
   
-          <div className={
-          `flex-row-center ${is_processed === "Yes" ? 'not_loading' : ''}`} style={{gap: "10px"}}>
+          <div className= 'flex-row-center'  style={{gap: "10px"}}>
           
             <div className='flex-row-center'>    
               <label htmlFor = "grid_width">Width:</label>
-              <input type='text' id='grid_width' defaultValue =  {dims.user_width} className="text-center mx-2" style={{width: "50px"}}></input>
+              <input type='text' id='grid_width' placeholder =  {dims.user_width} className="text-center mx-2" style={{width: "50px"}}></input>
             </div>
     
             <div className='flex-row-center'>    
               <label htmlFor = "grid_height">Height:</label>
-              <input type='text' id= 'grid_height' defaultValue= {dims.user_height} className="text-center mx-2" style={{width: "50px"}}></input>
+              <input type='text' id= 'grid_height' placeholder = {dims.user_height} className="text-center mx-2" style={{width: "50px"}}></input>
             </div>
             
             <button className='btn bg-light-grey' onClick={set_dim}> Submit </button>

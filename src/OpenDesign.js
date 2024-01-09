@@ -1,11 +1,12 @@
 
 import { useContext } from "react";
-import { DimContext, ImageContext, IsProcessedContext } from "./App";
+import { ColorContext, DimContext, ImageContext, IsProcessedContext } from "./App";
 
 export default function OpenDesign(){
     
     const is_processed_context = useContext(IsProcessedContext);
     const img_context = useContext(ImageContext);
+    const color_context = useContext(ColorContext);
     const dims = useContext(DimContext);
 
     const open = (event) => {
@@ -23,8 +24,8 @@ export default function OpenDesign(){
                         user_width: data.width,
                         user_height: data.height
                     });
+                    color_context.set_color(data.color_scheme);
                     is_processed_context.set_is_processed('Open');
-
                 }
                 catch{
                     alert('File is corrupt');

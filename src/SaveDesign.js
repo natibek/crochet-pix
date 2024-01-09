@@ -1,12 +1,15 @@
 import { latest_img } from "./Display";
-import { DimContext } from "./App";
+import { ColorContext, DimContext } from "./App";
 import { useContext } from "react";
 
 export default function SaveDesign(){
     const {dims, set_dims} = useContext(DimContext);
+    const color_context = useContext(ColorContext);
+    
     const save = () => {
         const output = {
             img_data: latest_img,
+            color_scheme: color_context.color,
             width: dims.user_width,
             height: dims.user_height
         };
