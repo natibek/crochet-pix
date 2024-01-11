@@ -11,7 +11,7 @@ export default function Nav(){
 
   return ( 
     <>
-      <ul className='d-flex justify-content-evenly align-items-center px-5 py-3 border border-bottom shadows' style={{listStyle: 'none', gap: "8px", backgroundColor: "rgb(255,235, 210)", width: "100dvw"}}>
+      <ul className='d-flex justify-content-evenly align-items-center px-5 py-3 border border-bottom shadows navigation' style={{listStyle: 'none', gap: "8px", backgroundColor: "rgb(255,235, 210)"}}>
         <li className="" > <UploadButton /> </li>
         <li className="" > <OpenDesign /> </li>
         <li className="" > <SaveDesign /> </li>
