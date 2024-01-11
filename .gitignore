@@ -7,6 +7,9 @@
 /server/node_modules
 /server/.venv
 /server/__pycache__
+/server/package-lock.json
+/server/package.json
+
 # testing
 /coverage
 
