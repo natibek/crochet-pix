@@ -14,7 +14,7 @@ export const SelectedColorContextInd = createContext();
 export const SelectedColorContext = createContext();
 export const DimContext = createContext();
 
-export const api_url = process.env.API_URL || "http://127.0.0.1:5000";
+export const api_url = process.env.RREACT_APP_API_URL || "http://127.0.0.1:5000";
 
 //Contexts for color, tool, state of processing, and processed image
 const SelectedColorContextProvider = ({children}) => {
