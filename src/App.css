@@ -250,6 +250,10 @@ body {
   width: 100dvw;
 }
 
+.upload {
+  max-width: 70dvw;
+}
+
 @media screen and (max-width: 710px) and (orientation: portrait) {
   #root {
     height: 100dvh;
@@ -261,6 +265,7 @@ body {
     transform-origin: left top;
     width: 100dvh;
     height: 100dvw;  
+    overflow-x: hidden;
     position: absolute;
     top: 100%;
     left: 0;
@@ -281,4 +286,10 @@ body {
     width: 100dvh;
     flex-grow: 1;
   }
+
+
+  .upload {
+    max-width: 70dvh;
+  }
+
 }

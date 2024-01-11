@@ -139,13 +139,13 @@ export default function UploadButton(){
         <input type="file" style={{display: 'none'}} id = "image_input" accept='image/*' onChange={image_upload}/>
       </div>
 
-      <Modal show = {crop} onHide={ ()=> { set_crop( !crop ) } } centered className='position-absolute start-50 top-50 translate-middle' style={{maxWidth: "70dvw"}}>
+      <Modal show = {crop} onHide={ ()=> { set_crop( !crop ) } } centered className='position-absolute start-50 top-50 translate-middle upload' >
         <Modal.Header closeButton >
           Crop Image
         </Modal.Header>
         
         <Modal.Body > 
-          <div id="crop_field" className='flex-row-center border border-2' style={{minWidth: "300px", maxWidth: "70dvw"}}> 
+          <div id="crop_field" className='flex-row-center border border-2' style={{minWidth: "300px", maxWidth: "90%"}}> 
             <ReactCrop crop={ cropTool } onChange={c => setCropTool(c)}>
               <img id = "crop_image"/>
             </ReactCrop>
