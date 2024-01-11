@@ -39,7 +39,7 @@ export default function OpenDesign(){
 
     return (
         <div>
-        <label htmlFor = "open_pattern" className="btn bg-light-grey"> Open Pattern </label>
+        <label htmlFor = "open_pattern" className="btn bg-light-grey" style={{fontSize: "13px"}}> Open Pattern </label>
         <input style={{display: 'none'}} id="open_pattern" type = 'file' accept=".crochet" onChange={open} />
         </div>
     );

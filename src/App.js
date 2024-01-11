@@ -14,7 +14,7 @@ export const SelectedColorContextInd = createContext();
 export const SelectedColorContext = createContext();
 export const DimContext = createContext();
 
-export const api_url = "http://127.0.0.1:5000/api";
+export const api_url = process.env.API_URL || "http://127.0.0.1:5000";
 
 //Contexts for color, tool, state of processing, and processed image
 const SelectedColorContextProvider = ({children}) => {
@@ -124,7 +124,7 @@ export default function App() {
                   <main>
                     <Nav />
                   
-                    <div className='d-flex justify-content-center align-itmes-start' style={{gap: "15px"}}>  
+                    <div className='tools_colors' style={{gap: "15px"}}>  
                       <Tool />
                       <DefaultColor />
                       <CustomColor />

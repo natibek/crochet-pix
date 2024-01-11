@@ -11,13 +11,13 @@ export default function Nav(){
 
   return ( 
     <>
-      <ul className='d-flex justify-content-between px-5 py-3 border border-bottom shadows' style={{listStyle: 'none', gap: "8px", backgroundColor: "rgb(255,235, 210)", width: "100dvw"}}>
+      <ul className='d-flex justify-content-evenly align-items-center px-5 py-3 border border-bottom shadows' style={{listStyle: 'none', gap: "8px", backgroundColor: "rgb(255,235, 210)", width: "100dvw"}}>
         <li className="" > <UploadButton /> </li>
         <li className="" > <OpenDesign /> </li>
         <li className="" > <SaveDesign /> </li>
         <li className="" > <DownloadImage /> </li>
+        <li> <a onClick={() => { set_info( !info ) }}> <i className="bi bi-question-circle"></i> </a> </li>
       </ul>
-      <a onClick={() => { set_info( !info ) }} className="position-absolute" style={{right: "10px", top: "23px"}}> <i className="bi bi-question-circle"></i> </a>
 
       <Modal show = {info} onHide={ ()=> { set_info( !info ) } } centered className='position-absolute start-50 top-50 translate-middle'>
         <Modal.Header closeButton >

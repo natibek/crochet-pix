@@ -361,9 +361,9 @@ export default function Display(){
     if (is_processed === "Processing"){
       return (
         <div className = 'flex-col-center loading rounded shadows_big p-5 my-3'>
-        <div>Pixelating</div>
-        <div id = "loading_img"><img  src={fill} width='300px' alt='Loading'/></div>            
-      </div>
+          <div>Pixelating</div>
+          <div id = "loading_img"><img  src={fill} width='150px' alt='Loading'/></div>            
+        </div>
       );
     }
   
@@ -418,21 +418,21 @@ export default function Display(){
 
         <div className= {`flex-row-center ${is_processed === "Processing" ? 'not_loading' : ''}`} style={{gap: "20px", marginBottom: "20px"}}>
           
-          <button className='btn bg-light-grey' id = 'reset_button' onClick={reset_grid}>Reset</button>
+          <button className='btn bg-light-grey' id = 'reset_button' onClick={reset_grid} style={{fontSize: "13px"}}>Reset</button>
   
           <div className= 'flex-row-center'  style={{gap: "10px"}}>
           
             <div className='flex-row-center'>    
-              <label htmlFor = "grid_width">Width:</label>
+              <label htmlFor = "grid_width" style={{fontSize: "13px"}}>Width:</label>
               <input type='text' id='grid_width' placeholder =  {dims.user_width} className="text-center mx-2" style={{width: "50px"}}></input>
             </div>
     
             <div className='flex-row-center'>    
-              <label htmlFor = "grid_height">Height:</label>
+              <label htmlFor = "grid_height" style={{fontSize: "13px"}}>Height:</label>
               <input type='text' id= 'grid_height' placeholder = {dims.user_height} className="text-center mx-2" style={{width: "50px"}}></input>
             </div>
             
-            <button className='btn bg-light-grey' onClick={set_dim}> Submit </button>
+            <button className='btn bg-light-grey' onClick={set_dim} style={{fontSize: "13px"}}> Submit </button>
           </div>
         </div>
         

@@ -29,7 +29,7 @@ async function process_image_api_call(requestData, width, height){
     };
   
     try {
-        const response = await fetch(api_url + "/process_image", requestOptions);
+        const response = await fetch(api_url + "/api/process_image", requestOptions);
   
         if (!response.ok){
           throw new Error("Error with POST");
@@ -135,17 +135,17 @@ export default function UploadButton(){
     return (
       <>
       <div>
-        <label htmlFor='image_input' className='btn bg-light-grey'> Upload Picture </label>
+        <label htmlFor='image_input' className='btn bg-light-grey' style={{fontSize: "13px"}}> Upload Picture </label>
         <input type="file" style={{display: 'none'}} id = "image_input" accept='image/*' onChange={image_upload}/>
       </div>
 
-      <Modal show = {crop} onHide={ ()=> { set_crop( !crop ) } } centered className='position-absolute start-50 top-50 translate-middle'>
+      <Modal show = {crop} onHide={ ()=> { set_crop( !crop ) } } centered className='position-absolute start-50 top-50 translate-middle' style={{maxWidth: "70dvw"}}>
         <Modal.Header closeButton >
           Crop Image
         </Modal.Header>
         
         <Modal.Body > 
-          <div id="crop_field" className='flex-row-center border border-2' style={{minWidth: "300px", maxWidth: "700px"}}> 
+          <div id="crop_field" className='flex-row-center border border-2' style={{minWidth: "300px", maxWidth: "70dvw"}}> 
             <ReactCrop crop={ cropTool } onChange={c => setCropTool(c)}>
               <img id = "crop_image"/>
             </ReactCrop>

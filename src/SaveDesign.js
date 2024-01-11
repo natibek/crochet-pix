@@ -14,7 +14,6 @@ export default function SaveDesign(){
             height: dims.user_height
         };
         
-        console.log(output);
         const blob = new Blob([JSON.stringify(output, null)], { type: 'application/json' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -23,6 +22,6 @@ export default function SaveDesign(){
     };
 
     return (
-        <div className="btn bg-light-grey" onClick={save}>Save Pattern</div>
+        <div className="btn bg-light-grey" onClick={save} style={{fontSize: "13px"}}>Save Pattern</div>
     );
 }

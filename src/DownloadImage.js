@@ -33,7 +33,7 @@ export default function DownloadImage(){
 
     return (
       <>
-      <button className="btn bg-light-grey" id = 'download_button' onClick={download}>Download Image</button>
+      <button className="btn bg-light-grey" id = 'download_button' onClick={download} style={{fontSize: "13px"}}>Download Image</button>
 
       {
         downloading ? 

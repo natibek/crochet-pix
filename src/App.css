@@ -8,8 +8,14 @@
 }
 body {
   box-sizing: border-box;
-  /* background-color: linear-gradient(to right, rgba(255,0,0,0), rgba(255,235, 210, 1)); */
-  background-image: linear-gradient(rgba(255,0,0,0), rgba(255,235, 210,1));
+  background-color: rgba(255,235, 210,0.5);
+}
+
+.tools_colors {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-wrap: wrap;
 }
 
 .app_container {
@@ -79,13 +85,17 @@ body {
 .grid_container {
   gap: 20px;
   color: black;
+  max-width: 70dvw;
+
+
 }
 /* grid container also has the reset, inputs and submit */
 .canvas {
   display: flex;
-  max-width: 700px;
+  max-width: 70dvw;
   max-height: 550px;
   margin-top: 20px;
+  padding-bottom: 20px;
   border-radius: 20px;
   overflow: auto;
   background-color: white;
@@ -97,7 +107,6 @@ body {
   display: grid;
   grid-template-columns: repeat(var(--num-cols), 15px);
   gap: 5px;
-  /* column-gap: 10px; */
 }
 /* pixel art section is the grid display */
 
@@ -216,12 +225,14 @@ body {
   position: relative;
   left: 49px;
   padding-bottom: 2px;
+  padding-top: 10px;
 }
 
 .bottom_count {
   display: flex;
   position: relative;
   left: 25px;
+  padding-bottom: auto;
 }
 
 
