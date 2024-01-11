@@ -96,7 +96,7 @@ body {
   padding: 20px;
   display: grid;
   grid-template-columns: repeat(var(--num-cols), 10px);
-  gap: 10px;
+  gap: 5px;
   column-gap: 10px;
 }
 /* pixel art section is the grid display */
