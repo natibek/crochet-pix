@@ -1,8 +1,12 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { IsProcessedContext, ImageContext, ColorContext } from './App';
 import { api_url } from './App';
 import { Modal } from 'react-bootstrap';
-import ReactCrop from 'react-image-crop'
+import ReactCrop from 'react-image-crop';
+import { signal } from "@preact/signals";
+
+export const file_name = signal("pattern");
+
 
 async function process_image_api_call(requestData, width, height){
     /*
@@ -59,8 +63,10 @@ export default function UploadButton(){
     const [ img, set_img ] = useState();
 
     const image_upload = (event) => {
-      let file = event.target.files[0];
-      
+      const file = event.target.files[0];
+      const [name, extension] = file.name.split('.');
+      file_name.value = name; 
+
       if (file){
         const file_reader = new FileReader();
   
@@ -77,7 +83,14 @@ export default function UploadButton(){
             setTimeout(() => {
               const image_element = document.getElementById('crop_image');
               image_element.src = image.src;
-              setCropTool(null);
+              const default_crop = {
+                x: 0,
+                y: 0,
+                unit: '%',
+                width: 10,
+                height: 10
+              }
+              setCropTool(default_crop);
             }, 0);
             
           };
@@ -101,6 +114,7 @@ export default function UploadButton(){
             let {pixel_data, color_scheme} = data;
             img_context.set_processed_pixel_data(pixel_data);
             color_context.set_color(color_scheme);
+            // localStorage.setItem('custom_color_scheme', JSON.stringify(color_scheme));
             is_processed_context.set_is_processed("Yes");
           });
           
@@ -131,6 +145,10 @@ export default function UploadButton(){
       set_raw_img({img: request_data, width: crop_width, height: crop_height})
     };
 
+    const handleHide = () => {
+      file_name.value = "pattern";
+      set_crop( !crop )
+    }
 
     return (
       <>
@@ -139,12 +157,12 @@ export default function UploadButton(){
         <input type="file" style={{display: 'none'}} id = "image_input" accept='image/*' onChange={image_upload}/>
       </div>
 
-      <Modal show = {crop} onHide={ ()=> { set_crop( !crop ) } } centered className='position-absolute start-50 top-50 translate-middle upload' >
-        <Modal.Header closeButton >
+      <Modal show = {crop} onHide={ () => {set_crop( !crop )} } backdrop="static" keyboard = {false} centered className='position-absolute start-50 top-50 translate-middle upload' >
+        <Modal.Header closeButton onClick={ handleHide } >
           Crop Image
         </Modal.Header>
         
-        <Modal.Body > 
+        <Modal.Body className='flex-col-center'> 
           <div id="crop_field" className='flex-row-center border border-2' style={{minWidth: "300px", maxWidth: "90%"}}> 
             <ReactCrop crop={ cropTool } onChange={c => setCropTool(c)}>
               <img id = "crop_image"/>
@@ -154,14 +172,9 @@ export default function UploadButton(){
 
         <Modal.Footer className='flex-row-center'>
 
-          {
-            cropTool !== null ? 
-            <button onClick={submitCrop} className='btn bg-light-grey'>
-              Submit
-            </button>
-            :
-            <></>
-          }
+          <button onClick={submitCrop} className='btn bg-light-grey'>
+            Submit
+          </button>
           
         </Modal.Footer>
       </Modal>

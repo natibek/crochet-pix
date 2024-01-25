@@ -3,7 +3,7 @@ import React from 'react';
 import './App.css';
 import Tool from './Tool';
 import { DefaultColor, CustomColor } from './Color';
-import Display from './Display';
+import Display, { latest_img } from './Display';
 import Nav from './Nav';
 
 export const ImageContext = createContext(null);
@@ -14,7 +14,7 @@ export const SelectedColorContextInd = createContext();
 export const SelectedColorContext = createContext();
 export const DimContext = createContext();
 
-export const api_url = process.env.RREACT_APP_API_URL || "http://127.0.0.1:5000";
+export const api_url = process.env.REACT_APP_API_URL || "http://127.0.0.1:5000";
 
 //Contexts for color, tool, state of processing, and processed image
 const SelectedColorContextProvider = ({children}) => {
@@ -99,11 +99,24 @@ export default function App() {
 
   useEffect( ()=>{
     const handleBeforeUnload = (e) => {
-      const message = "Reloading/leaving the site will lead to data loss. Make sure you have saved all your progress.";
+      const message = "Make sure you have saved all your progress.";
       e.returnValue = message;
-      return message; 
+      // localStorage.setItem('pixel_backup', JSON.stringify(latest_img.value));
+
+      // const pixel_backup = JSON.parse(localStorage.getItem('pixel_backup'));
+      // if(pixel_backup){
+      //   localStorage.setItem('pixel_backup', JSON.stringify(null));
+      // }
+      // else{
+      // }
+
+      // setTimeout(() => {
+      //   localStorage.setItem('pixel_backup', JSON.stringify(null));
+      // }, 1000);
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
+
+
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);

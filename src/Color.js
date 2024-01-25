@@ -31,7 +31,7 @@ export function CustomColor(){
                     key={ind + 20}
                     id = {ind + 20}
                     style = {{backgroundColor: `rgb(${c.r},${c.g},${c.b})`}}
-                    className = {`colors ${selected_color_ind === String(ind + 20)? 'highlight':''}`}
+                    className = {`colors ${selected_color_ind === String(ind + 20)? 'highlight':'small'}`}
                     onClick={selecting_color}
                   >
                   </div>
@@ -78,11 +78,11 @@ export function DefaultColor(){
         <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "10px"}}>
           <div>Default Colors</div>
   
-          <div className='color_palette'>
+          <div className='default_color_palette'>
             {default_color_scheme.map((color, ind) => (
               <div 
                 id = {ind}
-                className = {`colors ${selected_color_ind === String(ind)? 'highlight':''}`}
+                className = {`colors ${selected_color_ind === String(ind)? 'highlight':'small'}`}
                 onClick={selecting_color}
                 key={ind} 
                 style={{backgroundColor: color}}>

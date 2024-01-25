@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { DimContext, ImageContext, ToolContext, SelectedColorContext, IsProcessedContext } from "./App"
+import { DimContext, ImageContext, ToolContext, SelectedColorContext, IsProcessedContext, ColorContext } from "./App"
 import fill from "./assets/fill.svg";
 import { signal } from "@preact/signals";
 export const latest_img = signal(Array(15*15).fill({r:255, g: 255, b:255}));
@@ -12,20 +12,21 @@ export default function Display(){
     const {is_processed, set_is_processed} = useContext(IsProcessedContext);
     const tool_context = useContext(ToolContext);
     const selected_color_context = useContext(SelectedColorContext);
+    const color_context = useContext(ColorContext);
     let ncols = dims.user_width; 
     const [ display_pixel_data, set_display_pixel_data ] = useState({data: Array(dims.user_width*dims.user_height).fill({r:255, g: 255, b:255})});
 
     function filling(e){
       function same_color(p1, p2){
-        return (p1.r == p2.r && p1.g == p2.g && p1.b == p2.b);
+        return (p1.r === p2.r && p1.g === p2.g && p1.b === p2.b);
       }
 
       function valid_ind(ind){
         const end_ind = dims.user_height*dims.user_width - 1;
         const first_row = (ind - dims.user_width) < 0;
         const last_row = (ind + dims.user_width) > end_ind;
-        const last_col = (end_ind - ind) % dims.user_width == 0;
-        const first_col = ((end_ind + 1 - dims.user_width) - ind) % dims.user_width == 0;
+        const last_col = (end_ind - ind) % dims.user_width === 0;
+        const first_col = ((end_ind + 1 - dims.user_width) - ind) % dims.user_width === 0;
         let valid_inds = [];
   
         if (!first_row) valid_inds.push(ind - dims.user_width);
@@ -254,7 +255,23 @@ export default function Display(){
         ))}
       </div>
     );
+    
+    // useEffect( () => {
+    //   const pixel_backup = JSON.parse(localStorage.getItem("pixel_backup"));
 
+    //   if (pixel_backup){
+    //     set_display_pixel_data({data: pixel_backup})
+    //     set_dims(JSON.parse(localStorage.getItem('dims')));
+    //     color_context.set_color(JSON.parse(localStorage.getItem('custom_color_scheme')));
+    //     latest_img.value = pixel_backup
+    //     localStorage.setItem('pixel_backup', JSON.stringify(null));
+    //   }   
+
+    // }, [])
+
+    // useEffect( () => {
+    //   localStorage.setItem('dims', JSON.stringify(dims));
+    // }, [dims])
     useEffect( () => {
       if (is_processed === "Yes"){
         const pixels = document.getElementsByClassName('pix');
@@ -290,17 +307,19 @@ export default function Display(){
             b: Number(new_color[2])
           };
           latest_img.value[Number(event.target.id) - 1000] = new_color;
-          set_display_pixel_data({data:latest_img.value});
+          event.target.style.backgroundColor = selected_color_context.selected_color;
+          
+          // set_display_pixel_data({data:latest_img.value});
         } 
       } 
-      else if (tool_context.tool == "Fill" && selected_color_context.selected_color) {
+      else if (tool_context.tool === "Fill" && selected_color_context.selected_color) {
         filling(event);
       }
-      
     };
   
     const paint_multiple = (event) => {
       if (tool_context.tool === "Brush" && mouse_pressed && selected_color_context.selected_color){
+        event.preventDefault();
         let new_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
         new_color = {
           r: Number(new_color[0]),
@@ -308,7 +327,8 @@ export default function Display(){
           b: Number(new_color[2])
         };
         latest_img.value[Number(event.target.id) - 1000] = new_color;
-        set_display_pixel_data({data:latest_img.value});
+        event.target.style.backgroundColor = selected_color_context.selected_color;
+        // set_display_pixel_data({data:latest_img.value});
       } 
     };
   
@@ -366,11 +386,49 @@ export default function Display(){
         </div>
       );
     }
-  
+    const handleMouseDown = (e) => {
+      if (e.button === 0){
+        set_mouse_pressed(!mouse_pressed)
+      }      
+    } 
+
+    const handleTouchStart = (e) => {      
+      if (tool_context.tool === "Brush"){
+        e.preventDefault();
+        set_mouse_pressed(true)
+      }
+    }
+
+    
+    const handleTouchEnd = (e) => {
+      if (tool_context.tool === "Brush"){
+        e.preventDefault();
+        set_mouse_pressed(false)
+      }
+    }
+
+    const brush_with_touch = (event) => {
+      if (tool_context.tool === "Brush" &&  selected_color_context.selected_color){
+
+        const pixel = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
+        if (pixel.className === "pix"){
+          let new_color = selected_color_context.selected_color.replace('rgb(',"").replace(")","").replaceAll(" ","").split(",");
+          new_color = {
+            r: Number(new_color[0]),
+            g: Number(new_color[1]),
+            b: Number(new_color[2])
+          };
+          latest_img.value[Number(pixel.id) - 1000] = new_color;
+          pixel.style.backgroundColor = selected_color_context.selected_color;
+          // set_display_pixel_data({data:latest_img.value});
+        }
+      }
+    }
+
     return (
       <div className='grid_container flex-col-center' style={{width: 'fit-content'}} draggable = "false">
   
-        <div className='canvas shadows_big' id ="scrolling_canvas" draggable = "false">
+        <div className='canvas shadows_big' id ="scrolling_canvas" draggable = "false" onMouseLeave={ () => { set_mouse_pressed(false) }}>
           <div className= 'grid_box' id='grid' draggable = "false">
 
           <div className='up_down' draggable = "false">
@@ -382,9 +440,11 @@ export default function Display(){
               <div 
                 draggable="false"
                 className='grid_display' 
+                id="pix_grid"
                 style={{'--num-cols': ncols}} 
-                onMouseDown={ () => set_mouse_pressed(true) }
-                onMouseUp={ () => set_mouse_pressed(false) }
+                onMouseDown= { handleMouseDown }
+                // onTouchStart={ handleTouchStart }
+                // onTouchEnd={ handleTouchEnd }
               >
                 {
                   display_pixel_data.data.map((pixel_val, ind) => (
@@ -396,7 +456,8 @@ export default function Display(){
                       style={{ backgroundColor: `rgb(${pixel_val.r},${pixel_val.g},${pixel_val.b})` }}
                       onClick= { paint }
                       onMouseMove= { paint_multiple }
-                      onDrag= { ()=> set_mouse_pressed(false) }
+                      onTouchMove={ brush_with_touch }
+                      // onTouchMoveCapture={ paint_multiple }
                       title= {ind}
                       >
                     </div>

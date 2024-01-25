@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toJpeg } from 'html-to-image';
+import { file_name } from "./UploadButton";
 
 export default function DownloadImage(){
 
@@ -18,7 +19,7 @@ export default function DownloadImage(){
       toJpeg(target_div)
       .then(function (dataUrl) {
         var link = document.createElement('a');
-        link.download = 'my-image-name.jpeg';
+        link.download = file_name + '-crochet.jpeg';
         link.href = dataUrl;
         link.click();
       });
