@@ -33,6 +33,7 @@ export function CustomColor(){
                     style = {{backgroundColor: `rgb(${c.r},${c.g},${c.b})`}}
                     className = {`colors ${selected_color_ind === String(ind + 20)? 'highlight':'small'}`}
                     onClick={selecting_color}
+                    title={`rgb(${c.r},${c.g},${c.b})`}
                   >
                   </div>
                 ))
@@ -62,7 +63,14 @@ export function DefaultColor(){
       "#FFF200", "#EFE4B0", "#22B14C", "#B5E61D" , "#00A2E8",
       "#99D9EA", "#3F48CC", "#7092BE", "#A349A4", "#C8BFE7"
     ]
-    
+
+    const default_color_scheme_rgb = [
+      "rgb(0,0,0)", "rgb(255,255,255)" ,"rgb(127,127,127)", "rgb(195,195,195)", "rgb(136,000,021)",
+      "rgb(185,122,087)", "rgb(237,028,036)", "rgb(255,174,201)", "rgb(255,127,039)", "rgb(255,201,014)",
+      "rgb(255,242,000)","rgb(239,228,176)","rgb(034,177,076)","rgb(181,230,029)","rgb(000,162,232)",
+      "rgb(153,217,234)","rgb(063,072,204)","rgb(112,146,190)","rgb(163,073,164)","rgb(200,191,231)"
+    ] 
+
     const selecting_color = (event) => {
       if (selected_color_ind !== event.target.id){
         set_selected_color_ind(event.target.id);
@@ -79,13 +87,14 @@ export function DefaultColor(){
           <div>Default Colors</div>
   
           <div className='default_color_palette'>
-            {default_color_scheme.map((color, ind) => (
+            {default_color_scheme_rgb.map((color, ind) => (
               <div 
                 id = {ind}
                 className = {`colors ${selected_color_ind === String(ind)? 'highlight':'small'}`}
                 onClick={selecting_color}
                 key={ind} 
-                style={{backgroundColor: color}}>
+                style={{backgroundColor: color}}
+                title={color}>
               </div>
             ))}
           </div>

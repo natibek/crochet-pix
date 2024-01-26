@@ -51,7 +51,7 @@ const ColorContextProvider = ({children}) => {
 };
 
 const ToolContextProvider = ({children}) => {
-  const [tool, set_tool] = useState(null);
+  const [tool, set_tool] = useState("None");
   const value = {tool, set_tool};
 
   return (

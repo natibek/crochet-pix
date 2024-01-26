@@ -9,6 +9,7 @@
 body {
   box-sizing: border-box;
   background-color: rgba(255,235, 210,0.5);
+  user-select: none;
 }
 
 .tools_colors {
@@ -69,10 +70,6 @@ body {
   height: 40px;
 }
 
-.tools:hover {
-  border-color: red !important;
-  transform: scale(1.1);
-}
 
 .default_color_palette{
   display: grid;
@@ -142,21 +139,11 @@ body {
   height: 15px;
 }
 
-.pix:hover {
-  border-color: red;
-}
-.colors:hover {
-  border-color: red;
-  transform: scale(1.1);
-}
-
 .small {
   transform: scale(0.9);
-
 }
 .highlight {
   transform: scale(1.2);
-  /* color: red; */
   border: 2px dashed darkcyan;
 }
 
@@ -202,12 +189,10 @@ body {
   width: 30px;
   height: 20px;
   color: black;
-
 }
 
 .left_right {
   display: flex;
-  
   align-items: flex-start;
 }
 
@@ -240,7 +225,6 @@ body {
 .up_down {
   display: flex;
   flex-direction: column;
-  
 }
 
 .top_count {
@@ -264,16 +248,29 @@ body {
 .grid_buttons,
 .eraser_buttons {
   color: black;
+  user-select: none;
 }
 
-.grid_buttons:hover {
-  transform: scale(1.4);
-  cursor: pointer;
-}
-
-.eraser_buttons:hover {
-  transform: scale(1.2);
-  cursor: pointer;
+@media (hover: hover) {
+  .pix:hover {
+    transform: scale(1.1);
+  }
+  .colors:hover {
+    transform: scale(1.1);
+  }
+  .grid_buttons:hover {
+    transform: scale(1.4);
+    cursor: pointer;
+  }
+  
+  .eraser_buttons:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+  }  
+  
+  .tools:hover {
+    transform: scale(1.1);
+  }
 }
 
 .navigation {
@@ -282,6 +279,18 @@ body {
 
 .upload {
   max-width: 70dvw;
+}
+
+.custom-cursor{
+  position: absolute;
+  top:0;
+  left:0;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+}
+#cursor_img{
+  width: 25px !important;
 }
 
 /* @media screen and (max-width: 710px) and (orientation: portrait) {
