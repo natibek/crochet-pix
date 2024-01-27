@@ -5,15 +5,12 @@ import { signal } from "@preact/signals";
 export const latest_img = signal(Array(15*15).fill({r:255, g: 255, b:255}));
 
 export default function Display(){
-
     const [mouse_pressed, set_mouse_pressed] = useState(false);  
     const {dims, set_dims} = useContext(DimContext);
     const img_context = useContext(ImageContext); 
     const {is_processed, set_is_processed} = useContext(IsProcessedContext);
     const tool_context = useContext(ToolContext);
     const selected_color_context = useContext(SelectedColorContext);
-    const color_context = useContext(ColorContext);
-    let ncols = dims.user_width; 
     const [ display_pixel_data, set_display_pixel_data ] = useState({data: Array(dims.user_width*dims.user_height).fill({r:255, g: 255, b:255})});
 
     function filling(e){
@@ -66,7 +63,7 @@ export default function Display(){
         visited.add(cur_pix);
       }
 
-      set_display_pixel_data({data: latest_img.value});
+      set_display_pixel_data({...display_pixel_data, data: [...latest_img.value]});
     }
 
 
@@ -82,8 +79,9 @@ export default function Display(){
         user_width: prev.user_width + 1
       }));
       
+      
       latest_img.value = temp;
-      set_display_pixel_data({data: temp});
+      set_display_pixel_data({...display_pixel_data, data: [...temp]});
     }
 
     function remove_right() {
@@ -99,7 +97,7 @@ export default function Display(){
         }));
         
         latest_img.value = temp;
-        set_display_pixel_data({data: temp});
+        set_display_pixel_data({...display_pixel_data, data: [...temp]});
       }
     }
 
@@ -116,7 +114,7 @@ export default function Display(){
       }));
 
       latest_img.value = temp;
-      set_display_pixel_data({data: temp});
+      set_display_pixel_data({...display_pixel_data, data: [...temp]});
     }
 
     function remove_left() {
@@ -132,7 +130,7 @@ export default function Display(){
         }));
 
         latest_img.value = temp;
-        set_display_pixel_data({data: temp});
+        set_display_pixel_data({...display_pixel_data, data: [...temp]});
 
       }
     }
@@ -145,8 +143,7 @@ export default function Display(){
 
       const new_row = Array(dims.user_width).fill({r:255, g: 255, b:255});
       latest_img.value = [...new_row, ...latest_img.value];
-      set_display_pixel_data({data: latest_img.value});
-
+      set_display_pixel_data({...display_pixel_data, data: [...latest_img.value]});
     }
 
     function remove_top() {
@@ -155,8 +152,9 @@ export default function Display(){
           ...prev,
           user_height: prev.user_height - 1
         }));
-        set_display_pixel_data({data: latest_img.value.slice(dims.user_width)});
         latest_img.value = latest_img.value.slice(dims.user_width);
+        set_display_pixel_data({...display_pixel_data, data: [...latest_img.value]});
+
       }
     }
     function add_bottom() {
@@ -167,8 +165,7 @@ export default function Display(){
       }));
 
       latest_img.value = [...latest_img.value, ...Array(dims.user_width).fill({r:255, g: 255, b:255})];
-      latest_img.value.slice(dims.user_width);
-      set_display_pixel_data({data: latest_img.value});
+      set_display_pixel_data({...display_pixel_data, data: [...latest_img.value]});
 
     }
 
@@ -179,10 +176,9 @@ export default function Display(){
           user_height: prev.user_height - 1
         }));
   
-        set_display_pixel_data({data:latest_img.value.slice(0, latest_img.value.length - dims.user_width)});
         latest_img.value = latest_img.value.slice(0, latest_img.value.length - dims.user_width);
+        set_display_pixel_data({...display_pixel_data, data: [...latest_img.value]});
       }
-
     }
     
     let left_count = [];
@@ -209,7 +205,7 @@ export default function Display(){
     const right_count_div = (
       <div className='right_count' draggable = "false">
         {left_count.map((c, ind) => (
-          (c === '-') ? <div className='count_lr_em' key={ind}></div> : <div className='flex-row-center count_lr text-center' key={ind}>{c}</div>
+          (c === '-') ? <div className='count_lr_em' key={-97*ind}></div> : <div className='flex-row-center count_lr text-center' key={-97*ind}>{c}</div>
         ))}
 
         <div className="flex-row-center count_lr" style={{gap:"5px", paddingTop: '10px'}}>
@@ -225,7 +221,7 @@ export default function Display(){
           <div className="grid_buttons" onClick={remove_top}> - </div>
         </div>
         {right_count.map((c, ind) => (
-          (c === '-') ? <div className='count_lr_em' key={ind}></div> : <div className='flex-row-center count_lr text-center' key={ind}>{c}</div>
+          (c === '-') ? <div className='count_lr_em' key={-51*ind}></div> : <div className='flex-row-center count_lr text-center' key={-51*ind}>{c}</div>
         ))}
 
       </div>
@@ -234,7 +230,7 @@ export default function Display(){
       <div className='top_count' draggable = "false">
 
         {top_count.map((c, ind) => (
-          <div className='flex-row-center count_ud text-center' key={ind}>{c}</div>
+          <div className='flex-row-center count_ud text-center' key={-49*ind}>{c}</div>
         ))}
 
         <div  className="flex-row-center rotate_90"  style={{gap:"5px"}}>
@@ -251,7 +247,7 @@ export default function Display(){
           <div className="grid_buttons" onClick={remove_left}> - </div>
         </div>
         {bottom_count.map((c, ind) => (
-          <div className='flex-row-center count_ud text-center' key={ind}>{c}</div>
+          <div className='flex-row-center count_ud text-center' key={-1*ind}>{c}</div>
         ))}
       </div>
     );
@@ -302,16 +298,15 @@ export default function Display(){
           }
         });
       
-        set_display_pixel_data({data: img_context.processed_pixel_data.flat()});
+        set_display_pixel_data({...display_pixel_data, data: img_context.processed_pixel_data.flat()});
         latest_img.value = img_context.processed_pixel_data.flat();
-        ncols = img_context.processed_pixel_data[0].length;
         set_dims({
           user_width: img_context.processed_pixel_data[0].length,
           user_height: img_context.processed_pixel_data.length
         });
       } 
       else if (is_processed === 'Open'){
-        set_display_pixel_data({data: img_context.processed_pixel_data});
+        set_display_pixel_data({...display_pixel_data, data: img_context.processed_pixel_data});
         latest_img.value = img_context.processed_pixel_data;
       }
     }, [is_processed])
@@ -327,7 +322,6 @@ export default function Display(){
           };
           latest_img.value[Number(event.target.id) - 1000] = new_color;
           event.target.style.backgroundColor = selected_color_context.selected_color;
-          set_display_pixel_data({data:latest_img.value});
         } 
       } 
       else if (tool_context.tool === "Fill" && selected_color_context.selected_color) {
@@ -358,7 +352,7 @@ export default function Display(){
 
       const x = Math.floor(ind / dims.user_width);
       const y =  ind % dims.user_width;
-      let neighborhood = [[x,y]];
+      let neighborhood = [];
 
       let visited = new Set();
       let queue = [[x,y,0]];
@@ -374,7 +368,8 @@ export default function Display(){
             neigbors.forEach(neighbor => {
               if (!visited.has(neighbor)){
                 queue.push([neighbor[0], neighbor[1], depth + 1]);
-                neighborhood.push(dims.user_width * neighbor[0] + neighbor[1])
+                const index = dims.user_width * neighbor[0] + neighbor[1];
+                neighborhood.push(index);
               }
             });
           }
@@ -382,6 +377,7 @@ export default function Display(){
       }
       return neighborhood;
     }
+
     const brush_erase_touch = (event) => {
       if (tool_context.tool === "Brush" &&  selected_color_context.selected_color){
 
@@ -395,24 +391,21 @@ export default function Display(){
           };
           latest_img.value[Number(pixel.id) - 1000] = new_color;
           pixel.style.backgroundColor = selected_color_context.selected_color;
-          set_display_pixel_data({data:latest_img.value});
         }
       }
       else if (tool_context.tool.includes('Eraser')){
         const pixel = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
         if (pixel.className === "pix"){
-          // event.preventDefault();
+      
           const eraser_size = Number(tool_context.tool.slice(-1));
-          alert(eraser_size)
-          const ind = Number(pixel.id) - 1000
-  
+          const ind = Number(pixel.id) - 1000;
           const neighbors = neighbor_pixels(ind, eraser_size)
-          console.log(neighbors, ind, eraser_size)
           neighbors.forEach(index => {
+            const cur_pix = document.getElementById(String(index + 1000));
+            cur_pix.style.backgroundColor = 'white';
             latest_img.value[index] = {r: 255, g: 255, b:255};
           });
           
-          set_display_pixel_data({data:latest_img.value});
         }
       }
     }
@@ -428,7 +421,7 @@ export default function Display(){
         };
         latest_img.value[Number(event.target.id) - 1000] = new_color;
         event.target.style.backgroundColor = selected_color_context.selected_color;
-        set_display_pixel_data({data:latest_img.value});
+    
       } 
       else if (tool_context.tool.includes('Eraser') && mouse_pressed ){
         event.preventDefault();
@@ -438,10 +431,10 @@ export default function Display(){
         const neighbors = neighbor_pixels(ind, eraser_size)
 
         neighbors.forEach(index => {
+          const cur_pix = document.getElementById(String(index + 1000));
+          cur_pix.style.backgroundColor = 'white';
           latest_img.value[index] = {r: 255, g: 255, b:255};
         });
-
-        set_display_pixel_data({data:latest_img.value});
       }
     };
   
@@ -455,22 +448,16 @@ export default function Display(){
         let diff = width * height - dims.user_width * dims.user_height
         let newPixels = Array(diff).fill({r:255, g: 255, b:255});
         latest_img.value = [...latest_img.value, ...newPixels];
-        set_display_pixel_data({data:latest_img.value});
-        
-        set_dims({
-          user_width: width,
-          user_height: height
-        });
       }
       else if ((width * height < dims.user_width * dims.user_height)){
         latest_img.value = latest_img.value.slice(0, width * height);
-        set_display_pixel_data({data: latest_img.value});
-
-        set_dims({
-          user_width: width,
-          user_height: height
-        });
       }
+
+      set_display_pixel_data((prev) => ({data: latest_img.value, change: prev.change + 1}));
+      set_dims({
+        user_width: width,
+        user_height: height
+      });
     };
   
     const reset_grid = (e) => {
@@ -485,7 +472,7 @@ export default function Display(){
       const width_input = document.getElementById('grid_width');
       const height_input = document.getElementById('grid_height');
 
-      set_display_pixel_data({data: Array(15*15).fill({r:255, g: 255, b:255})});
+      set_display_pixel_data((prev) => ({data: Array(15*15).fill({r:255, g: 255, b:255}), change: prev.change + 1}));
       latest_img.value = Array(15*15).fill({r:255, g: 255, b:255});
       width_input.value = 15;
       height_input.value = 15;
@@ -501,14 +488,23 @@ export default function Display(){
     }
     const handleMouseDown = (e) => {
       if (e.button === 0){
+        if (mouse_pressed){
+          set_display_pixel_data({...display_pixel_data, data: [...latest_img.value]});
+        }
         set_mouse_pressed(!mouse_pressed)
+        
       }      
     } 
+
+    const handleMouseLeave = (e) => {
+      set_display_pixel_data({...display_pixel_data, data: [...latest_img.value]});
+      set_mouse_pressed(false)
+    }
 
     return (
       <div className='grid_container flex-col-center' style={{width: 'fit-content'}} draggable = "false">
   
-        <div className='canvas shadows_big' id ="scrolling_canvas" draggable = "false" onMouseLeave={ () => { set_mouse_pressed(false) }}>
+        <div className='canvas shadows_big' id ="scrolling_canvas" draggable = "false" onMouseLeave={ handleMouseLeave }>
           <div className= 'grid_box' id='grid' draggable = "false">
 
           <div className='up_down' draggable = "false">
@@ -521,7 +517,7 @@ export default function Display(){
                 draggable="false"
                 className='grid_display' 
                 id="pix_grid"
-                style={{'--num-cols': ncols}} 
+                style={{'--num-cols': dims.user_width}} 
                 onMouseDown= { handleMouseDown }
               >
                 {
@@ -535,6 +531,7 @@ export default function Display(){
                       onClick= { paint }
                       onMouseMove= { brush_erase_mouse }
                       onTouchMove={ brush_erase_touch }
+                      onTouchEnd={ ()=> set_display_pixel_data({...display_pixel_data, data: [...latest_img.value]})}
                       title= {ind}
                       >
                     </div>

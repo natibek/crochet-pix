@@ -5,6 +5,7 @@ import Tool from './Tool';
 import { DefaultColor, CustomColor } from './Color';
 import Display, { latest_img } from './Display';
 import Nav from './Nav';
+import { Modal } from 'react-bootstrap';
 
 export const ImageContext = createContext(null);
 export const IsProcessedContext = createContext();
@@ -96,6 +97,7 @@ const DimContextProvider = ({children}) => {
 };
 
 export default function App() {
+  const [show_alert, set_show_alert] = useState(JSON.parse(localStorage.getItem('show_alert')) === "SHOW" || !JSON.parse(localStorage.getItem('show_alert')));
 
   useEffect( ()=>{
     const handleBeforeUnload = (e) => {
@@ -116,7 +118,17 @@ export default function App() {
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
 
+    const alert_preferenece = JSON.parse(localStorage.getItem('show_alert'));
 
+    if (!alert_preferenece){
+      localStorage.setItem('show_alert', JSON.stringify("Show"))
+    }
+    else if (alert_preferenece === "Hide"){
+      set_show_alert(false);
+    }
+    else if (alert_preferenece === "Show"){
+      set_show_alert(true);
+    }
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -124,6 +136,15 @@ export default function App() {
 
   }, [] )
 
+  function handleCheckboxChange(){
+    const alert_preferenece = JSON.parse(localStorage.getItem('show_alert'));
+    if (alert_preferenece === "Hide"){
+      localStorage.setItem('show_alert', JSON.stringify("Show"))
+    }
+    else {
+      localStorage.setItem('show_alert', JSON.stringify("Hide"))
+    }
+  }
 
   return (
     <DimContextProvider>
@@ -159,6 +180,24 @@ export default function App() {
                     <br />
                     <div> &copy; January 2024</div>
                   </footer>
+
+                  <Modal show = {show_alert} onHide={ () => {set_show_alert(false)}} centered>                   
+                    <Modal.Header closeButton>
+
+                    </Modal.Header>
+                    <Modal.Body className='flex-col-center'> 
+                      <div className='p-4'>
+                        If on mobile, please use landscape orientation :)
+                      </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <div className='flex-row-center ' style={{gap: "10px"}} >
+                        <label style={{fontSize: '14px'}}> Don't Show Message Again </label>
+                        <input type="checkbox" onChange={handleCheckboxChange} className='p-3'/>
+                      </div>
+                    </Modal.Footer>
+                  </Modal>      
+
                 </div>
             </ImageContextProvider>
           </IsProcessedContextProvider>

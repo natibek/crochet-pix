@@ -242,8 +242,9 @@ export default function Tool(){
 
             <div className='flex-col-center' style={{gap: "10px"}}>
               <div className='flex-col-center position-relative'>
-                <div className='d-flex justify-content-between position-absolute' style={{top: '-25px', gap: '14px'}} >
+                <div className='flex-row-center position-absolute' style={{top: '-22px', gap: '8px'}} >
                   <div className="grid_buttons" onClick={increase_eraser_size} hidden = {!tool_context.tool.includes("Eraser")}> + </div>
+                  <div style={{fontSize: '14px'}} hidden = {!tool_context.tool.includes("Eraser")}>{eraser_size + 1}</div>
                   <div className="grid_buttons" onClick={decrease_eraser_size} hidden = {!tool_context.tool.includes("Eraser")}> - </div>
                 </div>
 
