@@ -19,12 +19,13 @@ def process_image():
     start = time.time()
     imageProcesser = ImageProcessor()
     imageProcesser.preprocess(original_pixel_data, width, height)
-    
+    print(width,height, 'input')
     processing_time = time.time() - start
 
     output = {"pixel_data": imageProcesser.pixel_data,
               "color_scheme": imageProcesser.colorScheme
               }
+    print(len(imageProcesser.pixel_data), len(imageProcesser.pixel_data[0]))
     memory_usage_before = psutil.Process().memory_info().rss / 1024 / 1024
     
     del imageProcesser

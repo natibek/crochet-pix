@@ -7,8 +7,8 @@ class ImageProcessor():
         self.preprocessed = []
         self.colorScheme = []
         self.threshold = 30
-        self.chunk_size = 25
-        self.stride = 25
+        self.chunk_size = 5
+        self.stride = 5
         self.mode = mode
 
     def preprocess(self, image_data, width, height):

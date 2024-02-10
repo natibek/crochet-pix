@@ -140,7 +140,7 @@ export default function UploadButton(){
       const canvas_context = canvas.getContext("2d", { willReadFrequently: true });
       canvas_context.drawImage(img, 0, 0);
       
-      const request_data = canvas_context.getImageData(cropTool.x, cropTool.y, crop_width, crop_height).data;
+      const request_data = canvas_context.getImageData(cropTool.x * aspectRatio, cropTool.y * aspectRatio, crop_width, crop_height).data;
       
       set_raw_img({img: request_data, width: crop_width, height: crop_height})
     };

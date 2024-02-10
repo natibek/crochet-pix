@@ -12,6 +12,9 @@
         "sizes": "192x192",
         "type": "image/svg"
       }
+    ],
+    "permissions" : [
+      "downloads"
     ]
   }
   

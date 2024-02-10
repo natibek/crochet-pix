@@ -304,10 +304,14 @@ export default function Display(){
           user_width: img_context.processed_pixel_data[0].length,
           user_height: img_context.processed_pixel_data.length
         });
+        set_is_processed('No');
+
       } 
       else if (is_processed === 'Open'){
         set_display_pixel_data({...display_pixel_data, data: img_context.processed_pixel_data});
+        console.log(img_context.processed_pixel_data)
         latest_img.value = img_context.processed_pixel_data;
+        set_is_processed('No');
       }
     }, [is_processed])
       

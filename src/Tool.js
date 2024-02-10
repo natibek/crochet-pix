@@ -167,11 +167,13 @@ export default function Tool(){
         canvas.addEventListener('touchmove', handleCursorPos);
         canvas.addEventListener('touchstart', handleEnter);
         canvas.addEventListener('touchend', handleEnter);
+        canvas.addEventListener('mouseover', handleEnter);
 
         return () => {
           canvas.removeEventListener('mousemove', handleCursorPos);
           canvas.removeEventListener('mouseleave',handleLeave);
           canvas.removeEventListener('mouseenter',handleEnter);
+          canvas.removeEventListener('mouseover', handleEnter);
           canvas.removeEventListener('touchmove', handleCursorPos);
           canvas.removeEventListener('touchstart', handleEnter);
           canvas.removeEventListener('touchend', handleEnter);
@@ -186,7 +188,7 @@ export default function Tool(){
     }, [tool_context.tool])
 
     function increase_eraser_size() {
-      if (tool_context.tool.includes('Eraser') && eraser_size + 1 < 3){
+      if (tool_context.tool.includes('Eraser') && eraser_size <= 1){
         const eraser_name = "Eraser " + String(eraser_size + 1);
         tool_context.set_tool(eraser_name);
         set_eraser_size(prev => prev + 1);
@@ -201,7 +203,7 @@ export default function Tool(){
     }
 
     function decrease_eraser_size() {
-      if (tool_context.tool.includes('Eraser') && eraser_size - 1 >= 0){
+      if (tool_context.tool.includes('Eraser') && eraser_size >= 1){
         const eraser_name = "Eraser " + String(eraser_size - 1) ;
         tool_context.set_tool(eraser_name);
         set_eraser_size(prev => prev - 1);
@@ -215,7 +217,39 @@ export default function Tool(){
         }
       }
     }
-  
+    useEffect( () => {
+      const brush_element = document.getElementById('brush_tool');
+      const pixel_element = document.getElementById('pixel_tool'); 
+      const fill_element = document.getElementById('fill_tool'); 
+      const eraser_element = document.getElementById('eraser_tool'); 
+
+      function handleKeyPresses(e){
+        const key = e.code;
+        
+        if (key === "KeyB") { brush_element.click() }
+        if (key === "KeyE") { eraser_element.click() }
+        if (key === "KeyF") { fill_element.click() }
+        if (key === "KeyP") { pixel_element.click() }
+        
+        // if (key === "Period") { 
+        //   alert(eraser_size)  
+        //   increase_eraser_size()   
+            
+        // }
+        // if (key === "Comma") { 
+        //   alert(eraser_size)
+        //   decrease_eraser_size()          
+        // }
+
+
+      }
+
+      document.addEventListener("keydown", handleKeyPresses)
+
+      return () => {
+        document.removeEventListener("keydown", handleKeyPresses)
+      }
+    }, [])
     return (
       
       <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content'}}>
@@ -243,12 +277,12 @@ export default function Tool(){
             <div className='flex-col-center' style={{gap: "10px"}}>
               <div className='flex-col-center position-relative'>
                 <div className='flex-row-center position-absolute' style={{top: '-22px', gap: '8px'}} >
-                  <div className="grid_buttons" onClick={increase_eraser_size} hidden = {!tool_context.tool.includes("Eraser")}> + </div>
+                  <div className="grid_buttons" id = "eraser_increase" onClick={increase_eraser_size} hidden = {!tool_context.tool.includes("Eraser")}> + </div>
                   <div style={{fontSize: '14px'}} hidden = {!tool_context.tool.includes("Eraser")}>{eraser_size + 1}</div>
-                  <div className="grid_buttons" onClick={decrease_eraser_size} hidden = {!tool_context.tool.includes("Eraser")}> - </div>
+                  <div className="grid_buttons" id = "eraser_decrease" onClick={decrease_eraser_size} hidden = {!tool_context.tool.includes("Eraser")}> - </div>
                 </div>
 
-                <div className='flex-row-center tools' id='eraser_tool' onClick={tool_select} title='Eraser: turns pixels back to white'> 
+                <div className='flex-row-center tools' id='eraser_tool' onClick={tool_select} title='Eraser: erases colored pixels'> 
                   <img src= {eraser} id = "eraser_img" alt='' width='25px' />
                 </div>
               </div>
