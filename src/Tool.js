@@ -261,7 +261,7 @@ export default function Tool(){
           custom_cursor
         }
         <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "20px"}}>
-          <div>Tools</div>
+          <div style={{fontSize: "14px"}}>Tools</div>
           <div className='d-flex justify-content-center align-items-center' style={{gap: "20px"}}>
 
             <div className='flex-col-center' style={{gap: "10px"}}>

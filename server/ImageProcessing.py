@@ -7,8 +7,8 @@ class ImageProcessor():
         self.preprocessed = []
         self.colorScheme = []
         self.threshold = 30
-        self.chunk_size = 5
-        self.stride = 5
+        self.chunk_size = 1
+        self.stride = 1
         self.mode = mode
 
     def preprocess(self, image_data, width, height):
@@ -31,8 +31,10 @@ class ImageProcessor():
 
             preprocessed_lst.append(curRow)
 
-        self.preprocessed = np.array(preprocessed_lst)
-        self.shrink(width, height)
+        self.preprocessed = np.array(preprocessed_lst)[::15, ::15]
+        self.pixel_data = self.preprocessed.tolist()
+        # print(self.preprocessed.shape, "place")
+        # self.shrink(self.preprocessed.shape[1], self.preprocessed.shape[0])
 
     def arePixelsSimilar(self, pix1, pix2):
         if self.mode == "regular":

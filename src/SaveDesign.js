@@ -23,6 +23,6 @@ export default function SaveDesign(){
     };
 
     return (
-        <div className="btn bg-light-grey" onClick={save} style={{fontSize: "13px"}}>Save Pattern</div>
+        <div className="btn bg-light-grey" onClick={save} style={{fontSize: "12px"}}>Save Pattern</div>
     );
 }

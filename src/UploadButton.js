@@ -153,7 +153,7 @@ export default function UploadButton(){
     return (
       <>
       <div>
-        <label htmlFor='image_input' className='btn bg-light-grey' style={{fontSize: "13px"}}> Upload Picture </label>
+        <label htmlFor='image_input' className='btn bg-light-grey' style={{fontSize: "12px"}}> Upload Picture </label>
         <input type="file" style={{display: 'none'}} id = "image_input" accept='image/*' onChange={image_upload}/>
       </div>
 

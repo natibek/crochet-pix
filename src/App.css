@@ -12,6 +12,11 @@ body {
   user-select: none;
 }
 
+.info :hover {
+  cursor: pointer;
+  color: red;
+}
+
 .tools_colors {
   display: flex;
   justify-content: center;

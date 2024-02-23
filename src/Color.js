@@ -22,7 +22,7 @@ export function CustomColor(){
       return (
         <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content'}}>
           <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "10px"}}>
-            <div>Image Colors</div>
+            <div style={{fontSize: "14px"}}>Image Colors</div>
   
             <div className='color_palette'>
               {
@@ -84,7 +84,7 @@ export function DefaultColor(){
     return (
       <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content'}}>
         <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "10px"}}>
-          <div>Default Colors</div>
+          <div style={{fontSize: "14px"}}>Default Colors</div>
   
           <div className='default_color_palette'>
             {default_color_scheme_rgb.map((color, ind) => (

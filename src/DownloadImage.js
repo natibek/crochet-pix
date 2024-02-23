@@ -38,7 +38,7 @@ export default function DownloadImage(){
 
     return (
       <>
-      <button className="btn bg-light-grey" id = 'download_button' onClick={download} style={{fontSize: "13px"}}>Download Image</button>
+      <button className="btn bg-light-grey" id = 'download_button' onClick={download} style={{fontSize: "12px"}}>Download Image</button>
 
       <Modal show={downloading} keyboard = {false} backdrop = 'static' centered className="p-absolute top-50 start-50 translate-middle w-50">
         <Modal.Body className="flex-col-center p-5" style={{gap: "20px"}}>

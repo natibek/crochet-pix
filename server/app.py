@@ -25,6 +25,8 @@ def process_image():
     output = {"pixel_data": imageProcesser.pixel_data,
               "color_scheme": imageProcesser.colorScheme
               }
+    
+    print(imageProcesser.pixel_data)
     print(len(imageProcesser.pixel_data), len(imageProcesser.pixel_data[0]))
     memory_usage_before = psutil.Process().memory_info().rss / 1024 / 1024
     
