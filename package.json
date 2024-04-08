@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@preact/signals": "^1.2.2",
+    "@preact/signals": "^1.2.3",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@uiw/react-color": "^2.1.1",
     "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
     "mathjs": "^12.1.0",

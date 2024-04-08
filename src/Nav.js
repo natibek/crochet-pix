@@ -13,22 +13,23 @@ export default function Nav(){
   
   const [ info, set_info ] = useState(false);
 
-  return ( 
+  return (
     <>
-      <ul className='d-flex justify-content-evenly align-items-center px-5 py-3 border border-bottom shadows navigation' style={{listStyle: 'none', gap: "8px", backgroundColor: "rgb(255,235, 210)"}}>
+      <ul className='d-flex justify-content-evenly align-items-center px-5 py-3 border border-bottom shadows navigation' 
+        style={{listStyle: 'none', gap: "8px", backgroundColor: "rgb(255,235, 210)", marginBottom: '30px'}}>
         <li > <UploadButton /> </li>
         <li > <OpenDesign /> </li>
         <li > <SaveDesign /> </li>
         <li > <DownloadImage /> </li>
-        <li className="info"> <a onClick={() => { set_info( !info ) }}> <i className="bi bi-question-circle"></i> </a> </li>
-      </ul>
+        <li className="info"> <div onClick={() => { set_info( !info ) }}> <i className="bi bi-question-circle"></i> </div> </li>
+      </ul>``
 
-      <Modal show = {info} onHide={ ()=> { set_info( !info ) } } centered className='position-absolute start-50 top-50 translate-middle'>
+    <Modal show = {info} onHide={ ()=> { set_info( !info ) } } size = "lg" centered className = "w-100">
         <Modal.Header closeButton >
           How to use the Crochet Pattern Generator
         </Modal.Header>
 
-        <Modal.Body className="d-flex flex-column justify-content-center align-items-start">
+        <Modal.Body style = {{width: "inherit"}} className = "p-4">
           <div className="p-2">
             <h2 className="fs-5"> Crochet Pattern Generator </h2>
             <p>
@@ -116,6 +117,5 @@ export default function Nav(){
         </Modal.Body>
       </Modal>
     </>
-
   );
 }

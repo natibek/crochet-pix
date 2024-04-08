@@ -157,20 +157,21 @@ export default function App() {
                 <div className='app_container' >
                   <main>
                     <Nav />
-                  
-                    <div className='tools_colors' style={{gap: "15px"}}>  
-                      <Tool />
-                      <DefaultColor />
-                      <CustomColor />
-                    </div> 
-                    
-                    <div className='flex-row-center' >
-                      <Display />
-                    </div>
-                    
-                    <br />
+
+                    <div className = "flew-col-center" style={{margin: 'auto'}}>
+                      <div className='tools_colors' style={{gap: "15px"}}>  
+                        <Tool />
+                        <DefaultColor />
+                        <CustomColor />
+                      </div> 
+                      
+                      <div className='flex-row-center' >
+                        <Display />
+                      </div>
+                    </div>                    
                   </main>
-                  
+
+                  <br />
                   <footer className='flex-col-center p-2 border border-top shadows' style={{backgroundColor: 'rgba(255,235, 210)', marginTop : 'auto'}}>
                     <div className='w-100 flex-row-center px-3'> 
                       Nathnael Bekele 

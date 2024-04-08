@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { DimContext, ImageContext, ToolContext, SelectedColorContext, IsProcessedContext, ColorContext } from "./App"
+import { DimContext, ImageContext, ToolContext, SelectedColorContext, IsProcessedContext } from "./App"
 import fill from "./assets/fill.svg";
 import { signal } from "@preact/signals";
 export const latest_img = signal(Array(15*15).fill({r:255, g: 255, b:255}));
@@ -510,45 +510,41 @@ export default function Display(){
   
         <div className='canvas shadows_big' id ="scrolling_canvas" draggable = "false" onMouseLeave={ handleMouseLeave }>
           <div className= 'grid_box' id='grid' draggable = "false">
+            <div className='up_down' draggable = "false">
+              {top_count_div}
 
-          <div className='up_down' draggable = "false">
-            {top_count_div}
+              <div className='left_right' draggable = "false">
+                {left_count_div}
 
-            <div className='left_right' draggable = "false">
-              {left_count_div}
-
-              <div 
-                draggable="false"
-                className='grid_display' 
-                id="pix_grid"
-                style={{'--num-cols': dims.user_width}} 
-                onMouseDown= { handleMouseDown }
-              >
-                {
-                  display_pixel_data.data.map((pixel_val, ind) => (
-                    <div 
-                      draggable="false"
-                      key = { 1000+ ind }
-                      id = { 1000 + ind } 
-                      className='pix' 
-                      style={{ backgroundColor: `rgb(${pixel_val.r},${pixel_val.g},${pixel_val.b})` }}
-                      onClick= { paint }
-                      onMouseMove= { brush_erase_mouse }
-                      onTouchMove={ brush_erase_touch }
-                      onTouchEnd={ ()=> set_display_pixel_data({...display_pixel_data, data: [...latest_img.value]})}
-                      title= {ind}
-                      >
-                    </div>
-
-                  ))
-                }
+                <div 
+                  draggable="false"
+                  className='grid_display' 
+                  id="pix_grid"
+                  style={{'--num-cols': dims.user_width}} 
+                  onMouseDown= { handleMouseDown }
+                >
+                  {
+                    display_pixel_data.data.map((pixel_val, ind) => (
+                      <div 
+                        draggable="false"
+                        key = { 1000 + ind }
+                        id = { 1000 + ind } 
+                        className='pix' 
+                        style={{ backgroundColor: `rgb(${pixel_val.r},${pixel_val.g},${pixel_val.b})` }}
+                        onClick= { paint }
+                        onMouseMove= { brush_erase_mouse }
+                        onTouchMove={ brush_erase_touch }
+                        // onTouchEnd={ ()=> set_display_pixel_data({...display_pixel_data, data: [...latest_img.value]})}
+                        title= {ind}
+                        >
+                      </div>
+                    ))
+                  }
+                </div>
+                {right_count_div}
               </div>
-              {right_count_div}
-
-
+              {bottom_count_div}
             </div>
-            {bottom_count_div}
-          </div>
               
             {/* Grid box */}
           </div>

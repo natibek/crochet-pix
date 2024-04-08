@@ -133,7 +133,7 @@ export default function Tool(){
           cursor_img = document.getElementById('cursor_img');
         }
 
-        function handleCursorPos(e){
+        function handleCursorPos(e){ // updates cursor position for the pseudo cursors
           let posx, posy;
           if (e.type === "mousemove"){
             posx = e.clientX + window.scrollX;
@@ -149,19 +149,20 @@ export default function Tool(){
           cursor_img.style.left = `${posx}px`;
           cursor_img.style.top = `${posy}px`;
         }
+        const canvas = document.getElementById('pix_grid');
 
-        function handleLeave(){
+        function handleLeave(){ // remove the cursor image when it leaves the grid/canvas
           cursor_div.style.display = 'none';
           cursor_img.style.display = 'none';
+          canvas.removeEventListener("mousemove", handleCursorPos);
         }
 
-        function handleEnter(){
+        function handleEnter(){ // make the pseudo-cursor visible once it enters the grid/canvas
           cursor_div.style.display = 'block';
           cursor_img.style.display = 'block';
-          document.getElementById('pix_grid').addEventListener("mousemove", handleCursorPos);
+          canvas.addEventListener("mousemove", handleCursorPos); // bind the handleCursorPos function to the grid
         }
         
-        const canvas = document.getElementById('pix_grid');
         canvas.addEventListener('mouseleave',handleLeave);
         canvas.addEventListener('mouseenter',handleEnter);
         canvas.addEventListener('touchmove', handleCursorPos);
@@ -177,9 +178,10 @@ export default function Tool(){
           canvas.removeEventListener('touchmove', handleCursorPos);
           canvas.removeEventListener('touchstart', handleEnter);
           canvas.removeEventListener('touchend', handleEnter);
+
         };
       }
-      else{
+      else{ // if no tool is selected, make the custom cursor invisible
         const cursor_div = document.getElementById('custom_cursor');
         if (cursor_div){
           cursor_div.style.display = 'none';
@@ -223,14 +225,13 @@ export default function Tool(){
       const fill_element = document.getElementById('fill_tool'); 
       const eraser_element = document.getElementById('eraser_tool'); 
 
-      function handleKeyPresses(e){
+      function handleKeyPresses(e){// shortcuts to tools
         const key = e.code;
         
-        if (key === "KeyB") { brush_element.click() }
-        if (key === "KeyE") { eraser_element.click() }
-        if (key === "KeyF") { fill_element.click() }
-        if (key === "KeyP") { pixel_element.click() }
-        
+        if (key === "KeyB") brush_element.click();
+        if (key === "KeyE") eraser_element.click();
+        if (key === "KeyF") fill_element.click();
+        if (key === "KeyP") pixel_element.click();
         // if (key === "Period") { 
         //   alert(eraser_size)  
         //   increase_eraser_size()   
@@ -240,29 +241,27 @@ export default function Tool(){
         //   alert(eraser_size)
         //   decrease_eraser_size()          
         // }
-
-
       }
 
-      document.addEventListener("keydown", handleKeyPresses)
+      document.addEventListener("keydown", handleKeyPresses);
 
       return () => {
-        document.removeEventListener("keydown", handleKeyPresses)
+        document.removeEventListener("keydown", handleKeyPresses);
       }
     }, [])
     return (
       
       <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content'}}>
-        {tool_context.tool.includes("Eraser") ? 
+        {tool_context.tool.includes("Eraser") ?  // pseudo-cursor for the eraser when it is selected
             <div id='eraser_cursor' className='custom-cursor'>
               <img src={eraser_cursor} id = "eraser_img" alt='' width='25px'/>
             </div>
           :
           custom_cursor
         }
-        <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "20px"}}>
+        <div className='flex-col-center p-4' style={{gap: "20px"}}>
           <div style={{fontSize: "14px"}}>Tools</div>
-          <div className='d-flex justify-content-center align-items-center' style={{gap: "20px"}}>
+          <div className='flex-row-center' style={{gap: "20px"}}>
 
             <div className='flex-col-center' style={{gap: "10px"}}>
               <div className='tools' id='pixel_tool' onClick={tool_select} title='Pixel: paint one pixel at a time'> 

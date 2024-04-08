@@ -1,45 +1,49 @@
 import { ColorContext, SelectedColorContextInd, SelectedColorContext } from './App';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { Modal } from 'react-bootstrap';
+import { Chrome } from '@uiw/react-color';
 
+let selectedColorInd = null;
 
 export function CustomColor(){
     const color_context = useContext(ColorContext);
-    const {selected_color_ind, set_selected_color_ind} = useContext(SelectedColorContextInd);
     const selected_color_context = useContext(SelectedColorContext);
   
   
     const selecting_color = (event) => {
-      if (selected_color_ind !== event.target.id){
-        set_selected_color_ind(event.target.id);
+      if (selectedColorInd !== event.target.id){
+        selectedColorInd = event.target.id;
         selected_color_context.set_selected_color(event.target.style.backgroundColor);
       } else {
-        set_selected_color_ind(null);
+        selectedColorInd = null;
         selected_color_context.set_selected_color(null);
       }
     };
   
     if (color_context.color){
       return (
-        <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content'}}>
-          <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "10px"}}>
-            <div style={{fontSize: "14px"}}>Image Colors</div>
-  
-            <div className='color_palette'>
-              {
-                color_context.color.map((c, ind) => (
-                  <div
-                    key={ind + 20}
-                    id = {ind + 20}
-                    style = {{backgroundColor: `rgb(${c.r},${c.g},${c.b})`}}
-                    className = {`colors ${selected_color_ind === String(ind + 20)? 'highlight':'small'}`}
-                    onClick={selecting_color}
-                    title={`rgb(${c.r},${c.g},${c.b})`}
-                  >
-                  </div>
-                ))
-              }
-      
-            </div>
+
+        <div 
+          className='flex-col-center p-4 shadows' 
+          style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content', width: 'fit-content'}}
+          >
+          <p style={{fontSize: "14px"}}>Image Colors</p>
+
+          <div className='color_palette'>
+            {
+              color_context.color.map((c, ind) => (
+                <div
+                  key={ind - 1000}
+                  id = {ind - 1000}
+                  style = {{backgroundColor: `rgb(${c.r},${c.g},${c.b})`}}
+                  className = {`colors ${selectedColorInd === String(ind - 1000)? 'highlight':'small'}`}
+                  onClick={selecting_color}
+                  title={`rgb(${c.r},${c.g},${c.b})`}
+                >
+                </div>
+              ))
+            }
+    
           </div>
         </div>
   
@@ -51,54 +55,148 @@ export function CustomColor(){
       );
     }
   
-  }
+}
   
 export function DefaultColor(){
-    const {selected_color_ind, set_selected_color_ind} = useContext(SelectedColorContextInd);
+
     const selected_color_context = useContext(SelectedColorContext);
-  
+    const [ user_colors, set_user_colors ] = useState([]); 
+    const [ show_color_wheel, set_show_color_wheel ] = useState(false);
+    const [ new_color, set_new_color ] = useState("#000000");
+    const [ color_error, set_color_error ] = useState('')
+
     const default_color_scheme = [
       "#000000", "#FFFFFF", "#7F7F7F", "#C3C3C3", "#880015",
       "#B97A57", "#ED1C24", "#FFAEC9", "#FF7F27" , "#FFC90E",
       "#FFF200", "#EFE4B0", "#22B14C", "#B5E61D" , "#00A2E8",
       "#99D9EA", "#3F48CC", "#7092BE", "#A349A4", "#C8BFE7"
-    ]
+    ];
 
     const default_color_scheme_rgb = [
       "rgb(0,0,0)", "rgb(255,255,255)" ,"rgb(127,127,127)", "rgb(195,195,195)", "rgb(136,000,021)",
       "rgb(185,122,087)", "rgb(237,028,036)", "rgb(255,174,201)", "rgb(255,127,039)", "rgb(255,201,014)",
       "rgb(255,242,000)","rgb(239,228,176)","rgb(034,177,076)","rgb(181,230,029)","rgb(000,162,232)",
       "rgb(153,217,234)","rgb(063,072,204)","rgb(112,146,190)","rgb(163,073,164)","rgb(200,191,231)"
-    ] 
+    ];
 
-    const selecting_color = (event) => {
-      if (selected_color_ind !== event.target.id){
-        set_selected_color_ind(event.target.id);
+    function deleteColor(e){
+      console.log(e.code, "Function", selectedColorInd, user_colors, selected_color_context.selected_color)
+
+      if (
+        e.code === "Delete" && 
+        selectedColorInd !== null && 
+        selectedColorInd >= default_color_scheme.length && 
+        selectedColorInd <= default_color_scheme.length + user_colors.length
+        )
+      {
+        document.getElementById(selectedColorInd).style.display = '';
+        const indexToRemove = selectedColorInd - default_color_scheme.length; 
+        const updated_user_colors = user_colors.filter((color, index) => index !== indexToRemove);
+        console.log("UPDATED", updated_user_colors)
+        set_user_colors(updated_user_colors);
+        localStorage.setItem('user_colors', JSON.stringify(updated_user_colors));
+        
+      }
+    }
+
+    useEffect(() => {
+      const stored_colors = JSON.parse(localStorage.getItem('user_colors'));
+      if (stored_colors && stored_colors.length > 0) set_user_colors(stored_colors);
+
+      document.addEventListener('keydown', deleteColor);
+      return () => {
+        document.removeEventListener('keydown', deleteColor);
+      };
+    }, []);
+
+    const selecting_color = (event) => 
+    { // sets the selected color
+      if (selectedColorInd !== event.target.id){ // if different than what is selected, update.
+        selectedColorInd = event.target.id;
+        console.log(selectedColorInd);
+        // set_selected_color_ind(event.target.id);
         selected_color_context.set_selected_color(event.target.style.backgroundColor);
       } else {
-        set_selected_color_ind(null);
+        selectedColorInd = null; // if the same, remove the selected.
         selected_color_context.set_selected_color(null);
       }
     };
+
+    function add_color()
+    {
+      console.log(new_color);
+
+      if (!default_color_scheme.includes(new_color) && !user_colors.includes(new_color)) {
+        localStorage.setItem('user_colors', JSON.stringify([...user_colors, new_color]));
+        set_user_colors((prev) => ([...prev, new_color]));
+        set_show_color_wheel(false);
+      }
+      else{
+        set_color_error(true);
+        setTimeout(() => {
+          set_color_error(false);
+        }, 1000);
+      }
+    } 
     
     return (
-      <div className='shadows' style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content'}}>
-        <div className='d-flex flex-column justify-content-center align-items-center p-3' style={{gap: "10px"}}>
-          <div style={{fontSize: "14px"}}>Default Colors</div>
-  
-          <div className='default_color_palette'>
-            {default_color_scheme_rgb.map((color, ind) => (
-              <div 
-                id = {ind}
-                className = {`colors ${selected_color_ind === String(ind)? 'highlight':'small'}`}
-                onClick={selecting_color}
-                key={ind} 
-                style={{backgroundColor: color}}
-                title={color}>
-              </div>
-            ))}
-          </div>
+      <>
+      <div 
+        className='flex-col-center p-4 shadows position-relative' 
+        style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content', width: 'fit-content'}}
+        >
+        <p 
+          className = "add_color position-absolute" 
+          style = {{width: '16px', height: '16px', top: "15px", right: "32px"}}
+          title = "Add color"
+          onClick = {() => { set_show_color_wheel(!show_color_wheel) }}>
+          +
+        </p>
+        <p style={{fontSize: "14px"}}>Colors</p>
+
+        <div className='default_color_palette'>
+          {default_color_scheme.map((color, ind) => (
+            <div 
+              id = {ind}
+              className = {`colors ${selectedColorInd === String(ind)? 'highlight':'small'}`}
+              onClick={selecting_color}
+              key={ind} 
+              style={{backgroundColor: color}}
+              title={color}>
+            </div>))
+          }
+
+          {
+          user_colors.map((color, ind) => (
+            <div 
+              id = {ind + default_color_scheme.length}
+              className = {`colors ${selectedColorInd === String(ind  + default_color_scheme.length)? 'highlight':'small'}`}
+              onClick={selecting_color}
+              key={ind  + default_color_scheme.length} 
+              style={{backgroundColor: color}}
+              title={color}>
+            </div>))
+          }
+
         </div>
-      </div>  
+      </div>
+
+      <Modal show = {show_color_wheel} onHide = {() => { set_show_color_wheel(!show_color_wheel) }} centered>
+        <Modal.Header closeButton style = {{backgroundColor: "rgba(255,235, 210)"}}>
+          Choose a New Color
+        </Modal.Header>
+
+        <Modal.Body className='flex-row-center py-3' style = {{backgroundColor: "rgba(255,235, 210,0.5)"}}>
+          <Chrome color = {new_color} onChange = {(color) => set_new_color(color.hex)}/>
+        </Modal.Body>
+
+        <Modal.Footer className='flex-col-center' style = {{backgroundColor: "rgba(255,235, 210)"}}>
+          <button onClick={add_color} className={`btn bg-light-grey ${color_error ? 'shake': ''}`}>
+            Add Color
+          </button>
+          <p style = {{color: 'red'}} hidden ={!color_error}> Color Already In List</p>
+        </Modal.Footer>
+      </Modal>
+      </>
     );
-  }
+}

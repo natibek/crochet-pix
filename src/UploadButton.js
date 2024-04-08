@@ -82,8 +82,8 @@ export default function UploadButton(){
             
             setTimeout(() => {
               const image_element = document.getElementById('crop_image');
-              image_element.src = image.src;
-              const default_crop = {
+              image_element.src = image.src; // sets the image in the cropping component
+              const default_crop = { //default position of the crop. 
                 x: 0,
                 y: 0,
                 unit: '%',
@@ -91,6 +91,8 @@ export default function UploadButton(){
                 height: 10
               }
               setCropTool(default_crop);
+              document.getElementById('crop_field').style.width = image.width + 2;
+              document.getElementById('crop_field').style.height = image.height + 2;
             }, 0);
             
           };
@@ -163,7 +165,7 @@ export default function UploadButton(){
         </Modal.Header>
         
         <Modal.Body className='flex-col-center'> 
-          <div id="crop_field" className='flex-row-center border border-2' style={{minWidth: "300px", maxWidth: "90%"}}> 
+          <div id="crop_field" className='flex-row-center border border-2' style={{maxHeight: "90%", maxWidth: "90%"}}> 
             <ReactCrop crop={ cropTool } onChange={c => setCropTool(c)}>
               <img id = "crop_image"/>
             </ReactCrop>

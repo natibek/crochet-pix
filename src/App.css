@@ -11,6 +11,21 @@ body {
   background-color: rgba(255,235, 210,0.5);
   user-select: none;
 }
+@keyframes shaking {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25%, 75% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+.shake {
+animation: shaking 0.5s ease-in-out;
+}
 
 .info :hover {
   cursor: pointer;
@@ -45,6 +60,11 @@ body {
   background-color: rgb(210,210,210);
 }
 
+.bg-off-white {
+  background-color: rgb(240,240,240);
+  
+}
+
 .flex-row-center {
   display: flex;
   justify-content: center;
@@ -66,6 +86,12 @@ body {
 
 }
 
+
+.add_color:hover{
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
 .tools {
   display: flex;
   justify-content: center;
@@ -78,23 +104,23 @@ body {
 
 .default_color_palette{
   display: grid;
-  grid-template-columns: repeat(5, 10px);
-  row-gap: 2px;
-  column-gap: 13px;
+  grid-template-columns: repeat(5, 18px);
+  row-gap: 5px;
+  column-gap: 2px;
 }
 
 
 .color_palette{
   display: grid;
-  grid-template-columns: repeat(8, 10px);
-  row-gap: 2px;
-  column-gap: 13px;
+  grid-template-columns: repeat(8, 18px);
+  row-gap: 5px;
+  column-gap: 2px;
 }
 
 .colors {
   border-style: solid;
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
 }
 
 .grid_container {
@@ -129,6 +155,7 @@ body {
   padding: 20px;
   color: black;
   background-color: white;
+  margin-bottom: -8px;
 }
 
 .processing {
@@ -262,6 +289,7 @@ body {
   }
   .colors:hover {
     transform: scale(1.1);
+    cursor: pointer;
   }
   .grid_buttons:hover {
     transform: scale(1.4);
@@ -275,6 +303,7 @@ body {
   
   .tools:hover {
     transform: scale(1.1);
+    cursor: pointer;
   }
 }
 
