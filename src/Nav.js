@@ -13,10 +13,10 @@ export default function Nav(){
   
   const [ info, set_info ] = useState(false);
 
-  return (
+  return ( // rgb(255,235, 210)
     <>
       <ul className='d-flex justify-content-evenly align-items-center px-5 py-3 border border-bottom shadows navigation' 
-        style={{listStyle: 'none', gap: "8px", backgroundColor: "rgb(255,235, 210)", marginBottom: '30px'}}>
+        style={{listStyle: 'none', gap: "8px", backgroundColor: "#DEEFF5", marginBottom: '30px'}}> 
         <li > <UploadButton /> </li>
         <li > <OpenDesign /> </li>
         <li > <SaveDesign /> </li>

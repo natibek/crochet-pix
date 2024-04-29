@@ -172,7 +172,7 @@ export default function App() {
                   </main>
 
                   <br />
-                  <footer className='flex-col-center p-2 border border-top shadows' style={{backgroundColor: 'rgba(255,235, 210)', marginTop : 'auto'}}>
+                  <footer className='flex-col-center p-2 border border-top shadows' style={{backgroundColor: '#DEEFF5', marginTop : 'auto'}}>
                     <div className='w-100 flex-row-center px-3'> 
                       Nathnael Bekele 
                       &nbsp;  <a href='https://www.linkedin.com/in/nathnael-bekele-2b240b257' target='_blank' rel='noreferrer'> <i className="bi bi-linkedin"></i></a> 

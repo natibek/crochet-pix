@@ -185,15 +185,15 @@ export function DefaultColor(){
       </div>
 
       <Modal show = {show_color_wheel} onHide = {() => { set_show_color_wheel(!show_color_wheel) }} centered>
-        <Modal.Header closeButton style = {{backgroundColor: "rgba(255,235, 210)"}}>
+        <Modal.Header closeButton style = {{backgroundColor: "#DEEFF5"}}>
           Choose a New Color
         </Modal.Header>
 
-        <Modal.Body className='flex-row-center py-3' style = {{backgroundColor: "rgba(255,235, 210,0.5)"}}>
+        <Modal.Body className='flex-row-center py-3' style = {{backgroundColor: "hsl(194, 51%, 96%)"}}>
           <Chrome color = {new_color} onChange = {(color) => set_new_color(color.hex)}/>
         </Modal.Body>
 
-        <Modal.Footer className='flex-col-center' style = {{backgroundColor: "rgba(255,235, 210)"}}>
+        <Modal.Footer className='flex-col-center' style = {{backgroundColor: "#DEEFF5"}}>
           <button onClick={add_color} className={`btn bg-light-grey ${color_error ? 'shake': ''}`}>
             Add Color
           </button>
