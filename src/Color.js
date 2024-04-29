@@ -9,7 +9,6 @@ export function CustomColor(){
     const color_context = useContext(ColorContext);
     const selected_color_context = useContext(SelectedColorContext);
   
-  
     const selecting_color = (event) => {
       if (selectedColorInd !== event.target.id){
         selectedColorInd = event.target.id;
@@ -61,9 +60,10 @@ export function DefaultColor(){
 
     const selected_color_context = useContext(SelectedColorContext);
     const [ user_colors, set_user_colors ] = useState([]); 
+    let user_col_len = 0;
     const [ show_color_wheel, set_show_color_wheel ] = useState(false);
     const [ new_color, set_new_color ] = useState("#000000");
-    const [ color_error, set_color_error ] = useState('')
+    const [ color_error, set_color_error ] = useState('');
 
     const default_color_scheme = [
       "#000000", "#FFFFFF", "#7F7F7F", "#C3C3C3", "#880015",
@@ -79,22 +79,21 @@ export function DefaultColor(){
       "rgb(153,217,234)","rgb(063,072,204)","rgb(112,146,190)","rgb(163,073,164)","rgb(200,191,231)"
     ];
 
-    function deleteColor(e){
-      console.log(e.code, "Function", selectedColorInd, user_colors, selected_color_context.selected_color)
+    function deleteColor(){
 
       if (
-        e.code === "Delete" && 
         selectedColorInd !== null && 
         selectedColorInd >= default_color_scheme.length && 
-        selectedColorInd <= default_color_scheme.length + user_colors.length
+        selectedColorInd < default_color_scheme.length + user_colors.length
         )
       {
-        document.getElementById(selectedColorInd).style.display = '';
         const indexToRemove = selectedColorInd - default_color_scheme.length; 
-        const updated_user_colors = user_colors.filter((color, index) => index !== indexToRemove);
-        console.log("UPDATED", updated_user_colors)
-        set_user_colors(updated_user_colors);
-        localStorage.setItem('user_colors', JSON.stringify(updated_user_colors));
+        const latest_colors = user_colors.filter((color, index) => index !== indexToRemove);
+        localStorage.setItem('user_colors', JSON.stringify(latest_colors));
+        set_user_colors(latest_colors);
+
+        selected_color_context.set_selected_color(null);
+        selectedColorInd = null;
         
       }
     }
@@ -103,18 +102,12 @@ export function DefaultColor(){
       const stored_colors = JSON.parse(localStorage.getItem('user_colors'));
       if (stored_colors && stored_colors.length > 0) set_user_colors(stored_colors);
 
-      document.addEventListener('keydown', deleteColor);
-      return () => {
-        document.removeEventListener('keydown', deleteColor);
-      };
     }, []);
 
     const selecting_color = (event) => 
     { // sets the selected color
       if (selectedColorInd !== event.target.id){ // if different than what is selected, update.
         selectedColorInd = event.target.id;
-        console.log(selectedColorInd);
-        // set_selected_color_ind(event.target.id);
         selected_color_context.set_selected_color(event.target.style.backgroundColor);
       } else {
         selectedColorInd = null; // if the same, remove the selected.
@@ -124,11 +117,10 @@ export function DefaultColor(){
 
     function add_color()
     {
-      console.log(new_color);
 
       if (!default_color_scheme.includes(new_color) && !user_colors.includes(new_color)) {
         localStorage.setItem('user_colors', JSON.stringify([...user_colors, new_color]));
-        set_user_colors((prev) => ([...prev, new_color]));
+        set_user_colors([...user_colors, new_color]);
         set_show_color_wheel(false);
       }
       else{
@@ -145,12 +137,23 @@ export function DefaultColor(){
         className='flex-col-center p-4 shadows position-relative' 
         style={{borderRadius: "20px", backgroundColor:'white', height: 'fit-content', width: 'fit-content'}}
         >
+
+          
         <p 
           className = "add_color position-absolute" 
-          style = {{width: '16px', height: '16px', top: "15px", right: "32px"}}
+          style = {{width: '16px', height: '16px', top: "21px", left: "35px"}}
           title = "Add color"
           onClick = {() => { set_show_color_wheel(!show_color_wheel) }}>
           +
+        </p>
+
+        <p 
+          className = "add_color position-absolute" 
+          style = {{width: '16px', height: '16px', top: "21px", right: "25px"}}
+          title = "Add color"
+          hidden = {selectedColorInd === null || selectedColorInd < 20}
+          onClick = {() => { deleteColor() }}>
+          -
         </p>
         <p style={{fontSize: "14px"}}>Colors</p>
 
@@ -166,13 +169,13 @@ export function DefaultColor(){
             </div>))
           }
 
-          {
+          { 
           user_colors.map((color, ind) => (
             <div 
               id = {ind + default_color_scheme.length}
               className = {`colors ${selectedColorInd === String(ind  + default_color_scheme.length)? 'highlight':'small'}`}
               onClick={selecting_color}
-              key={ind  + default_color_scheme.length} 
+              key={color} 
               style={{backgroundColor: color}}
               title={color}>
             </div>))

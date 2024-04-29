@@ -95,7 +95,8 @@ animation: shaking 0.5s ease-in-out;
 .tools {
   display: flex;
   justify-content: center;
-  border-style: solid;
+  border: 1px solid black;
+  border-radius: 20px;
   padding: 4px;
   width: 40px;
   height: 40px;
@@ -118,9 +119,10 @@ animation: shaking 0.5s ease-in-out;
 }
 
 .colors {
-  border-style: solid;
+  border: 2px solid  black;
   width: 18px;
   height: 18px;
+  border-radius: 4px;
 }
 
 .grid_container {
@@ -165,7 +167,7 @@ animation: shaking 0.5s ease-in-out;
 /* pixel grid */
 
 .pix {
-  border-width: 2px;
+  border-width: 1px;
   border-style: solid;
   width: 15px;
   height: 15px;
