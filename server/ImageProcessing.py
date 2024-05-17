@@ -2,39 +2,49 @@ import numpy as np
 
 class ImageProcessor():
 
-    def __init__(self, mode = "regular") -> None:
-        self.pixel_data = None
+    def __init__(self, img, width, height, mode = "regular") -> None:
+        self.pixel_data = []        
         self.preprocessed = []
         self.colorScheme = []
+        self.img_data = img
+
+        self.width = width
+        self.height = height
         self.threshold = 30
-        self.chunk_size = 1
-        self.stride = 1
+        self.chunk_size = 25
+        self.stride = 25
         self.mode = mode
 
-    def preprocess(self, image_data, width, height):
+        self.preprocess()
+
+    def preprocess(self, ):
         
         preprocessed_lst = []
-        for row in range(0,height):
-            curRow = []
+        if self.mode == 'np':
+            self.preprocessed = self.img_data
+            self.shrink()
+        else:
+            for row in range(0,self.height):
+                curRow = []
 
-            for col in range(0, width*4, 4):
-                red = image_data[col + row * width * 4]
-                green = image_data[col + 1+ row * width * 4]
-                blue = image_data[col + 2 +row * width * 4]
+                for col in range(0, self.width*4, 4):
+                    red = self.img_data[col + row * self.width * 4]
+                    green = self.img_data[col + 1+ row * self.width * 4]
+                    blue = self.img_data[col + 2 +row * self.width * 4]
 
-                if self.mode == "regular":
-                    pixel = { "r": red, "g": green, "b": blue }
-                else:
-                    pixel = [red, green, blue]
+                    if self.mode == "regular":
+                        pixel = { "r": red, "g": green, "b": blue }
+                    elif self.mode == 'tonp':
+                        pixel = [red, green, blue]
 
-                curRow.append(pixel)
+                    curRow.append(pixel)
 
-            preprocessed_lst.append(curRow)
-
-        self.preprocessed = np.array(preprocessed_lst)[::15, ::15]
-        self.pixel_data = self.preprocessed.tolist()
-        # print(self.preprocessed.shape, "place")
-        # self.shrink(self.preprocessed.shape[1], self.preprocessed.shape[0])
+                preprocessed_lst.append(curRow)
+            self.shrink()
+            # self.preprocessed = np.array(preprocessed_lst)[::15, ::15]
+            # self.pixel_data = self.preprocessed
+            # print(self.preprocessed.shape, "place")
+            # self.shrink(self.preprocessed.shape[1], self.preprocessed.shape[0])
 
     def arePixelsSimilar(self, pix1, pix2):
         if self.mode == "regular":
@@ -43,8 +53,10 @@ class ImageProcessor():
         else:
             r1, g1, b1 = pix1
             r2, g2, b2 = pix2
-
+            # print(r1, g1, b1)
+            # print(r2, g2, b2)
         if abs(r1 - r2) <= self.threshold and abs(g1 - g2) <= self.threshold and abs(b1 - b2) <= self.threshold:
+            # print('similar')
             return True
         return False
 
@@ -71,27 +83,32 @@ class ImageProcessor():
         
         return False
     
-    def shrink(self, width, height):
-        self.pixel_data = []
-        for row in range(0, height, self.stride):
+    def shrink(self):
+        
+        print(self.width, self.height, 'dims')
+        for row in range(0, self.height, self.stride):
             rowEnd = row + self.chunk_size
-            if (rowEnd > height): rowEnd = height
+            if (rowEnd > self.height): rowEnd = self.height
 
             newRow = []
-            for col in range(0, width, self.stride):
+            for col in range(0, self.width, self.stride):
                 colEnd = col + self.stride
-                if (colEnd > width): colEnd = width
-
+                if (colEnd > self.width): colEnd = self.width
+                # print(row, rowEnd, col, colEnd)
                 curSubset = self.preprocessed[row:rowEnd, col:colEnd]
                 newPixel = self.reduce(curSubset)
-
-                if not newPixel:
-                    continue
-                if not self.inColorScheme(newPixel) or len(self.colorScheme) == 0:
+                # print(newPixel)
+                
+                if (self.inColorScheme(newPixel) is False) or len(self.colorScheme) == 0:
                     self.colorScheme.append(newPixel)
                 else:
                     newPixel = self.inColorScheme(newPixel)
                 newRow.append(newPixel)
-
             self.pixel_data.append(newRow)
+    
+        if self.mode != 'regular':
+            # print(len(self.pixel_data))
+            # for i in range(len(self.pixel_data)):
+            #     print(len(self.pixel_data[i]))
+            self.pixel_data = np.asarray(self.pixel_data, np.int64)
         
