@@ -21,7 +21,7 @@ def process_image():
     imageProcesser = ImageProcessor(pixel_data, width, height)
 
     pixelated, colorScheme = imageProcesser.process()
-
+    print(len(pixelated[0]), len(pixelated))
     print(width,height, 'input')
 
     processing_time = time.time() - start
@@ -30,8 +30,6 @@ def process_image():
               "color_scheme": colorScheme
               }
     
-    print(pixelated)
-    print(len(pixelated), len(pixelated[0]))
     memory_usage_before = psutil.Process().memory_info().rss / 1024 / 1024
     
     del imageProcesser
