@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from ImageProcessing import ImageProcessor
+from ImageProcessing2_0 import ImageProcessor
 import time
 import gc, psutil
 
@@ -13,27 +13,31 @@ CORS(app)
 @app.route('/api/process_image', methods = ["POST"])
 def process_image():
     req = request.get_json()
-    original_pixel_data = list(req['image'].values())
+    pixel_data = list(req['image'].values())
     width = int(req['width'])
     height = int(req['height'])
+
     start = time.time()
-    imageProcesser = ImageProcessor()
-    imageProcesser.preprocess(original_pixel_data, width, height)
+    imageProcesser = ImageProcessor(pixel_data, width, height)
+
+    pixelated, colorScheme = imageProcesser.process()
+
     print(width,height, 'input')
+
     processing_time = time.time() - start
 
-    output = {"pixel_data": imageProcesser.pixel_data,
-              "color_scheme": imageProcesser.colorScheme
+    output = {"pixel_data": pixelated,
+              "color_scheme": colorScheme
               }
     
-    print(imageProcesser.pixel_data)
-    print(len(imageProcesser.pixel_data), len(imageProcesser.pixel_data[0]))
+    print(pixelated)
+    print(len(pixelated), len(pixelated[0]))
     memory_usage_before = psutil.Process().memory_info().rss / 1024 / 1024
     
     del imageProcesser
     gc.collect()
     memory_usage_after = psutil.Process().memory_info().rss / 1024 / 1024
-    with open('log.txt', 'a') as file:
+    with open('log2_0.txt', 'a') as file:
         file.write(f"\n({width},{height}) -> {processing_time} \n")
         file.write(f"Memory before: {memory_usage_before} \n")
         file.write(f"Memory after : {memory_usage_after} \n")
