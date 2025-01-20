@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,26 +19,41 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="msapplication-starturl" content="/" />
     <meta name="msapplication-TileColor" content="#" />
+    <link rel="stylesheet" href="{% static 'index.css' %}" />
+    <link rel="icon" href="{% static 'thread.svg' %}" type="image/svg+xml" />
 
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
 
     <link href="https://unpkg.com/react-image-crop/dist/ReactCrop.css" rel="stylesheet" />
-    <link rel="icon" href="/assets/thread.svg" type="image/svg+xml" />
     <link rel="manifest" href="manifest.json" />
 
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
+      integrity="sha512-UtLOu9C7NuThQhuXXrGwx9Jb/z9zPQJctuAgNUBK3Z6kkSYT9wJ+2+dh6klS+TDBCV9kNPBbAxbVD+vCcfGPaA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"
+      integrity="sha512-JyCZjCOZoyeQZSd5+YEAcFgz2fowJ1F1hyJOXgtKu4llIa0KneLcidn5bwfutiehUTiOuK87A986BZJMko0eWQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   </head>
 
   <body>
-    <script src="https://unpkg.com/react-image-crop/dist/index.umd.cjs"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
@@ -54,15 +70,11 @@
           action="{% url 'image_upload' %}"
           method="post"
           enctype="multipart/form-data"
+          style="min-width: fit-content"
         >
-          <div>
-            <label for="image_input" class="btn bg-light-grey" style="font-size: 12px">
-              Upload Picture
-            </label>
-            <input type="file" style="display: none" id="image_input" accept="image/*" />
-          </div>
-
-          <input type="submit" value="Submit" style="display: none" />
+          <label for="image_input" class="btn bg-light-grey nav-button"> Upload Picture </label>
+          <input type="file" style="display: none" id="image_input" accept="image/*" />
+          <input type="submit" value="+" />
         </form>
       </li>
 
@@ -74,33 +86,20 @@
           enctype="multipart/form-data"
         >
           <div>
-            <label for="open_design" class="btn bg-light-grey" style="font-size: 12px">
-              Open Design
-            </label>
+            <label for="open_design" class="btn bg-light-grey nav-button"> Open Design </label>
             <input type="file" style="display: none" id="open_design" accept=".crochet" />
+            <input type="submit" value="+" />
           </div>
-
-          <input type="submit" value="Submit" style="display: none" />
         </form>
         <OpenDesign />
       </li>
       <li>
-        <a
-          for="open_design"
-          class="btn bg-light-grey"
-          style="font-size: 12px"
-          href="{% url 'save_design' %}"
-        >
+        <a for="open_design" class="btn bg-light-grey nav-button" href="{% url 'save_design' %}">
           Save Design
         </a>
       </li>
       <li>
-        <a
-          for="open_design"
-          class="btn bg-light-grey"
-          style="font-size: 12px"
-          href="{% url 'download_img' %}"
-        >
+        <a for="open_design" class="btn bg-light-grey nav-button" href="{% url 'download_img' %}">
           Download Image
         </a>
         <DownloadImage />
@@ -121,16 +120,14 @@
     >
       <div class="w-100 flex-row-center px-3">
         Nathnael Bekele &nbsp;
-        <a
-          href="https://www.linkedin.com/in/nathnael-bekele-2b240b257"
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a href="https://www.linkedin.com/in/nati-bekele" target="_blank" rel="noreferrer">
           <i className="bi bi-linkedin"></i>
+          LinkedIn
         </a>
         &nbsp;
         <a href="https://github.com/natibek" target="_blank" rel="noreferrer">
           <i className="bi bi-github"></i>
+          Github
         </a>
       </div>
       <br />
