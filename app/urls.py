@@ -4,4 +4,8 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("image_upload", views.image_upload, name="image_upload"),
+    path("open_design", views.open_design, name="open_design"),
+    path("save_design", views.save_design, name="save_design"),
+    path("download_img", views.download_img, name="download_img"),
 ]
