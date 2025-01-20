@@ -2,157 +2,135 @@
 
 <!--  -->
 
-{% block content %} 
+{% block content %}
 
 <!-- <p>{{ dims.width }} {{ dims.height }} </p> -->
 <div class="flex-row-center">
-    <div
-      class="grid_container flex-col-center"
-      style="width: fit-content;"
-      draggable="false"
-    >
-      <div
-        class="canvas shadows_big"
-        id="scrolling_canvas"
-        draggable="false"
-      >
-        <div class="grid_box" id="grid" draggable="false">
-          <div class="up_down" draggable="false">
+  <div class="grid_container flex-col-center" style="width: fit-content" draggable="false">
+    <div class="canvas shadows_big" id="scrolling_canvas" draggable="false">
+      <div class="grid_box" id="grid" draggable="false">
+        <div class="up_down" draggable="false">
+          <div class="top_count" draggable="false">
+            {% for i in horizontal %}
+            <div class="flex-row-center count_ud text-center">{{ i }}</div>
+            {% endfor %}
 
-            <div class="top_count" draggable="false">
-                {% for i in horizontal %}
-                <div class="flex-row-center count_ud text-center">
-                  {{ i }}
-                </div>
-                {% endfor %}
-
-                <div class="flex-row-center rotate_90" style="gap: 5px;">
-                  <div class="grid_buttons" onclick={add_right}>
-                    +
-                  </div>
-                  <div class="grid_buttons" onclick={remove_right}>
-                    -
-                  </div>
-                </div>
+            <div class="flex-row-center rotate_90" style="gap: 5px">
+              <div class="grid_buttons" onclick="{add_right}">+</div>
+              <div class="grid_buttons" onclick="{remove_right}">-</div>
             </div>
+          </div>
 
-            <div class="left_right" draggable="false">
-              <div class="left_count" draggable="false">
-                <div class="flex-row-center count_lr" style="gap: 5px; padding-bottom: 10px">
-                  <div class="grid_buttons" onClick="{add_top}">+</div>
-                  <div class="grid_buttons" onClick="{remove_top}">-</div>
-                </div>
-              
-                {% for i in left%}
-                {% if i == "-" %}
-                    <div class="count_lr_em"></div>
-                {% else %}
-                    <div class="flex-row-center count_lr text-center">{{i}}</div>
-                {% endif %}
-              
-                {% endfor %}
+          <div class="left_right" draggable="false">
+            <div class="left_count" draggable="false">
+              <div class="flex-row-center count_lr" style="gap: 5px; padding-bottom: 10px">
+                <div class="grid_buttons" onClick="{add_top}">+</div>
+                <div class="grid_buttons" onClick="{remove_top}">-</div>
               </div>
 
-              <div
-                class="grid_display"
-                style="--num-cols: {{ dims.width }};"
-                draggable="false"
-                id="pix_grid"
-              >
+              {% for i in left%} {% if i == "-" %}
+              <div class="count_lr_em"></div>
+              {% else %}
+              <div class="flex-row-center count_lr text-center">{{i}}</div>
+              {% endif %} {% endfor %}
+            </div>
+
+            <div
+              class="grid_display"
+              style="--num-cols: {{ dims.width }};"
+              draggable="false"
+              id="pix_grid"
+            >
               <!-- prettier-ignore -->
               {% for ind, pixel in pixels %}
-                  <div
-                    id="{{ ind }}"
-                    class="pix"
-                    title="{{ ind }}"
-                ></div>
-                    <!-- onclick="paint({{ ind }})"
+              <div id="{{ ind }}" class="pix" title="{{ ind }}"></div>
+              <!-- onclick="paint({{ ind }})"
                     style="background-color: rgb({{pixel.r}}, {{pixel.g}}, {{pixel.b}});"
                     onmousemove="brush_erase_mouse(event, {{ ind }})"
                     ontouchmove="brush_erase_touch(event, {{ ind }})" -->
               {% endfor %}
-              </div>
-              <div class="right_count" draggable="false">
-                {% for i in right %}
-                {% if i == "-" %}
-                    <div class="count_lr_em"></div>
-                {% else %}
-                    <div class="flex-row-center count_lr text-center">{{i}}</div>
-                {% endif %}
-              
-                {% endfor %}
-
-                <div class="flex-row-center count_lr" style="gap: 5px; padding-bottom: 10px">
-                  <div class="grid_buttons" onClick="{add_top}">+</div>
-                  <div class="grid_buttons" onClick="{remove_top}">-</div>
-                </div>
-              </div>
-
             </div>
+            <div class="right_count" draggable="false">
+              {% for i in right %} {% if i == "-" %}
+              <div class="count_lr_em"></div>
+              {% else %}
+              <div class="flex-row-center count_lr text-center">{{i}}</div>
+              {% endif %} {% endfor %}
 
-        <div class="bottom_count" draggable="false">
-          <div class="flex-row-center rotate_90" style="gap: 5px;">
-            <div class="grid_buttons" onClick={add_left}>+</div>
-            <div class="grid_buttons" onClick={remove_left}>-</div>
+              <div class="flex-row-center count_lr" style="gap: 5px; padding-bottom: 10px">
+                <div class="grid_buttons" onClick="{add_top}">+</div>
+                <div class="grid_buttons" onClick="{remove_top}">-</div>
+              </div>
+            </div>
           </div>
+
+          <div class="bottom_count" draggable="false">
+            <div class="flex-row-center rotate_90" style="gap: 5px">
+              <div class="grid_buttons" onClick="{add_left}">+</div>
+              <div class="grid_buttons" onClick="{remove_left}">-</div>
+            </div>
             {% for i in horizontal %}
-            <div class="flex-row-center count_ud text-center">
-                    {{ i }}
-            </div>
+            <div class="flex-row-center count_ud text-center">{{ i }}</div>
             {% endfor %}
-            </div>
-        </div>
-          <!-- {/* Grid box */} -->
-        </div>
-      </div>
-
-      <div
-        class="flex-row-center {% if is_processed == 'Processing' %}not_loading{% endif %}"
-        style="gap: 20px; margin-bottom: 20px;"
-      >
-        
-        <a
-          class="btn bg-light-grey"
-          id="reset_button"
-          onClick="reset_grid"
-          style="font-size: 13px;"
-          href="{% url 'reset_img' %}"
-        >
-          Reset
-        </a>
-
-        <div class="flex-row-center" style="gap: 10px">
-          <div class="flex-row-center">
-            <label for="grid_width" style="font-size: 13px">
-              Width:
-            </label>
-            <input
-              type="text"
-              id="grid_width"
-              placeholder="{{ dims.width }}"
-              class="text-center mx-2"
-              style="width: 50px;"
-            ></input>
           </div>
-
-          <div class="flex-row-center">
-            <label for="grid_height" style="font-size: 13px">
-              Height:
-            </label>
-            <input
-              type="text"
-              id="grid_height"
-              placeholder="{{ dims.height }}"
-              class="text-center mx-2"
-              style="width: 50px;"
-            ></input>
-          </div>
-
-          <button class="btn bg-light-grey" onclick="set_dim" style="font-size: 13px">
-            Submit
-          </button>
         </div>
+        <!-- {/* Grid box */} -->
       </div>
     </div>
+
+    <div
+      class="flex-row-center {% if is_processed == 'Processing' %}not_loading{% endif %}"
+      style="gap: 20px; margin-bottom: 20px"
+    >
+      <a
+        class="btn bg-light-grey"
+        id="reset_button"
+        onClick="reset_grid"
+        style="font-size: 13px"
+        href="{% url 'reset_img' %}"
+      >
+        Reset
+      </a>
+
+      <form
+        class="flex-row-center" 
+        style="gap: 10px"
+        action="{% url 'resize_img' %}"
+        method="post"
+        enctype="multipart/form-data"
+        style="min-width: fit-content"
+      >
+        <div class="flex-row-center">
+          <label for="new_width" style="font-size: 13px">
+            Width:
+          </label>
+          <input
+            type="text"
+            name="new_width"
+            id="new_width"
+            placeholder="{{ dims.width }}"
+            class="text-center mx-2"
+            style="width: 50px;"
+          ></input>
+        </div>
+
+        <div class="flex-row-center">
+          <label for="new_height" style="font-size: 13px">
+            Height:
+          </label>
+          <input
+            type="text"
+            id="new_height"
+            name="new_height"
+            placeholder="{{ dims.height }}"
+            class="text-center mx-2"
+            style="width: 50px;"
+          ></input>
+        </div>
+
+        <input class="btn bg-light-grey" type="submit" value="Submit" style="font-size: 13px; width: fit-content;" />
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}

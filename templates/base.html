@@ -60,55 +60,59 @@
       crossorigin="anonymous"
     ></script>
 
-    <ul
-      class="d-flex justify-content-evenly align-items-center px-5 py-3 border border-bottom shadows navigation"
-      style="list-style: none; gap: 8px; background-color: #deeff5; margin-bottom: 30px"
-    >
-      <li>
-        <form
-          class="nav-form"
-          action="{% url 'image_upload' %}"
-          method="post"
-          enctype="multipart/form-data"
-          style="min-width: fit-content"
-        >
-          <div>
-            <label for="image_input" class="btn bg-light-grey nav-button"> Upload Picture </label>
-            <input type="file" style="display: none" id="image_input" accept="image/*" />
-            <input type="submit" value="+" />
-          </div>
-        </form>
-      </li>
+    <main>
+      <ul
+        class="d-flex justify-content-evenly align-items-center px-5 py-3 border border-bottom shadows navigation"
+        style="list-style: none; gap: 8px; background-color: #deeff5; margin-bottom: 30px"
+      >
+        <li>
+          <form
+            class="nav-form"
+            action="{% url 'image_upload' %}"
+            method="post"
+            enctype="multipart/form-data"
+            style="min-width: fit-content"
+          >
+            <div>
+              <label for="image_input" class="btn bg-light-grey nav-button">
+                Upload Picture
+              </label>
+              <input type="file" style="display: none" id="image_input" accept="image/*" />
+              <input type="submit" value="+" />
+            </div>
+          </form>
+        </li>
 
-      <li>
-        <form
-          class="nav-form"
-          action="{% url 'open_design' %}"
-          method="post"
-          enctype="multipart/form-data"
-        >
-          <div>
-            <label for="open_design" class="btn bg-light-grey nav-button"> Open Design </label>
-            <input type="file" style="display: none" id="open_design" accept=".crochet" />
-            <input type="submit" value="+" />
-          </div>
-        </form>
-      </li>
-      <li>
-        <a class="btn bg-light-grey nav-button" href="{% url 'save_design' %}"> Save Design </a>
-      </li>
-      <li>
-        <a class="btn bg-light-grey nav-button" href="{% url 'download_img' %}">
-          Download Image
-        </a>
-      </li>
-      <li class="info">
-        <a class="btn bg-light-grey nav-button" href="{% url 'show_info' %}"> ? </a>
-      </li>
-    </ul>
+        <li>
+          <form
+            class="nav-form"
+            action="{% url 'open_design' %}"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            <div>
+              <label for="open_design" class="btn bg-light-grey nav-button"> Open Design </label>
+              <input type="file" style="display: none" id="open_design" accept=".crochet" />
+              <input type="submit" value="+" />
+            </div>
+          </form>
+        </li>
+        <li>
+          <a class="btn bg-light-grey nav-button" href="{% url 'save_design' %}"> Save Design </a>
+        </li>
+        <li>
+          <a class="btn bg-light-grey nav-button" href="{% url 'download_img' %}">
+            Download Image
+          </a>
+        </li>
+        <li class="info">
+          <a class="btn bg-light-grey nav-button" href="{% url 'show_info' %}"> ? </a>
+        </li>
+      </ul>
 
-    <!--  -->
-    {% block content %} {% endblock %}
+      <!--  -->
+      {% block content %} {% endblock %}
+    </main>
 
     <footer
       class="flex-col-center p-2 border border-top shadows"

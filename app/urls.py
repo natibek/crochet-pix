@@ -9,5 +9,6 @@ urlpatterns = [
     path("save_design", views.save_design, name="save_design"),
     path("download_img", views.download_img, name="download_img"),
     path("show_info", views.show_info, name="show_info"),
+    path("resize_img", views.resize_img, name="resize_img"),
     path("reset_img", views.reset_img, name="reset_img"),
 ]

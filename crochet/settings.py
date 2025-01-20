@@ -49,6 +49,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 3600  # Session expires in 1 hour
+
 ROOT_URLCONF = 'crochet.urls'
 
 TEMPLATES = [
