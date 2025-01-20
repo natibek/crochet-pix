@@ -72,9 +72,11 @@
           enctype="multipart/form-data"
           style="min-width: fit-content"
         >
-          <label for="image_input" class="btn bg-light-grey nav-button"> Upload Picture </label>
-          <input type="file" style="display: none" id="image_input" accept="image/*" />
-          <input type="submit" value="+" />
+          <div>
+            <label for="image_input" class="btn bg-light-grey nav-button"> Upload Picture </label>
+            <input type="file" style="display: none" id="image_input" accept="image/*" />
+            <input type="submit" value="+" />
+          </div>
         </form>
       </li>
 
@@ -91,23 +93,17 @@
             <input type="submit" value="+" />
           </div>
         </form>
-        <OpenDesign />
       </li>
       <li>
-        <a for="open_design" class="btn bg-light-grey nav-button" href="{% url 'save_design' %}">
-          Save Design
-        </a>
+        <a class="btn bg-light-grey nav-button" href="{% url 'save_design' %}"> Save Design </a>
       </li>
       <li>
-        <a for="open_design" class="btn bg-light-grey nav-button" href="{% url 'download_img' %}">
+        <a class="btn bg-light-grey nav-button" href="{% url 'download_img' %}">
           Download Image
         </a>
-        <DownloadImage />
       </li>
-      <li className="info">
-        <div>
-          <i className="bi bi-question-circle"></i>
-        </div>
+      <li class="info">
+        <a class="btn bg-light-grey nav-button" href="{% url 'show_info' %}"> ? </a>
       </li>
     </ul>
 
