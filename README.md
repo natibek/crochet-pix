@@ -1,10 +1,8 @@
-# Crochet_Pattern_Generator
+# Crochet Pix
 
-A conversation with my sister about her crocheting projects helped me realize the demand for easily accessible software that is able to generate pixel patterns of images to aid with generating crochet patterns. With my interest in web development and image processing, I plan to use React, Node.js, Express, and CSS to create a website that accepts an image and produces a pixelated editable image showing where the edges are and the major color composition of the pixels. 
+My sister crochets and her pipeline for coming up with designs is going to Pinterest and hoping that the crochet patterns she finds appeal to her. Image-to-crochet pattern conversion is a useful solution to avoid the search-and-hope strategy. 
 
-The first stages of the project included experimenting using Python's Pillow image processing library to test edge detection algorithms (found on https://github.com/natibek/Crochet_website). I tested the use of Convolution Neural Networks for this project but they were unnecessary since I could develop my own image analysis algorithm. The flow of my new algorithm is taking an image input, using Rest APIs to send a post request to the backend that uses Math.js and clever caching for the analysis, and then using the generated pixel data to produce an editable pixel art image (this stage is found on https://github.com/natibek/Crochet_Pattern_Generator). This final version has a React front end that uses an Express API to access the Node.js backend for processing.
+Crochet Pix is a Django and JS web application that generates editable pixel art from images to design crochet patterns. It has features to allow downloading patterns as images as well as *.crochet* files to continue editing in the future. 
 
-The image analysis uses Math.js and clever caching, as aforementioned, to first divide the image into 25 by 25-pixel chucks, take the average of the color within those chunks, and then find chunks that are similar enough in their RGB values within the entire image to encode them with a new color - their average. This not only produces an image with a color scheme that is not too large (making crocheting the pattern reasonable) but also reduces its size for server-side display and further processing. Now that I have the first stages of the backend completed, I will work on generating the pixel art representation from the output of the analysis. In the future, I hope to add a database feature so that users can generate multiple patterns and store them.
-
-
+The aim of the image analysis is to converge similar hues to the same one and reduce the dimensions of the input to help make images crochetable. **scikit-image** is used to segment and simplify input images. 
 
